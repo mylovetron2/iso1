@@ -1,0 +1,9 @@
+# Debug logs
+debug_bddk.log
+
+# Temp files
+*.tmp
+*.bak
+
+# Password files
+password.txt
