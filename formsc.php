@@ -6150,32 +6150,26 @@ style=\"vertical-align: bottom;\" border=\"0\" alt=\"Thêm\" title=\"\" onclick=
 if ($cv=="KT")
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\" checked>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" >
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\" >
 		 </span>
 	     <br><br>";
 elseif ($cv=="BD")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" checked > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" >
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\" >
 		 </span>
 	     <br><br>"; 
 elseif ($cv=="SC")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" >
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\" >
 		 </span>
 		 <br><br>";
-elseif ($cv=="BDDK")
-		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\"  checked>
-		 </span>
-	     <br><br>"; 
 else
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 		 
@@ -6320,6 +6314,7 @@ $nhomsc=isset($_POST['nhomsc']) ? $_POST['nhomsc'] : '';
 $maql=isset($_POST['maql']) ? $_POST['maql'] : '';
 
 $cv=isset($_POST['cv']) ? $_POST['cv'] : '';
+$bddk=isset($_POST['bddk']) ? $_POST['bddk'] : '';
 
 // DEBUG: Hiển thị toàn bộ dữ liệu POST (DISABLED - can cause 500 error)
 /*
@@ -6579,13 +6574,14 @@ mysql_query($update) or die(mysql_error());
 $log_file = __DIR__ . '/debug_bddk.log';
 $log_msg = date('Y-m-d H:i:s') . " - START BDDK CHECK\n";
 $log_msg .= "cv = '$cv'\n";
+$log_msg .= "bddk = '$bddk'\n";
 $log_msg .= "mavt = '$mavt', somay = '$somay', model = '$model'\n";
 $log_msg .= "thangs = '$thangs', nams = '$nams'\n";
 $log_msg .= "username = '$username'\n";
 $log_msg .= "nhomsc = '$nhomsc'\n";
 file_put_contents($log_file, $log_msg, FILE_APPEND);
 
-if($cv == 'BDDK') {
+if($bddk == 'BDDK') {
 	file_put_contents($log_file, "INSIDE BDDK BLOCK\n", FILE_APPEND);
 	
 	// Lấy thietbi_id từ bảng thietbi_iso
@@ -6713,8 +6709,48 @@ if($cv == 'BDDK') {
 		file_put_contents($log_file, "ERROR: Không tìm thấy thiết bị với mavt='$mavt', somay='$somay', model='$model'\n", FILE_APPEND);
 	}
 } else {
-	// Debug: cv không phải là BDDK
-	file_put_contents($log_file, "cv='$cv' is NOT 'BDDK', skipping\n", FILE_APPEND);
+	// BDDK không được check → Xóa kế hoạch BDDK cho quý tương ứng
+	file_put_contents($log_file, "BDDK UNCHECKED - clearing BDDK plan\n", FILE_APPEND);
+	
+	// Lấy thietbi_id từ bảng thietbi_iso
+	$thietbi_id_query = mysql_query("SELECT stt FROM thietbi_iso WHERE mavt='$mavt' AND somay='$somay' AND model='$model'");
+	
+	if($thietbi_row = mysql_fetch_array($thietbi_id_query)) {
+		$thietbi_id_bddk = $thietbi_row['stt'];
+		
+		// Xác định quý dựa trên tháng
+		$thang_bd = (int)$thangs;
+		$nam_bd = (int)$nams;
+		$quy = ceil($thang_bd / 3);
+		
+		file_put_contents($log_file, "Clearing Quarter $quy for thietbi_id: $thietbi_id_bddk, year: $nam_bd\n", FILE_APPEND);
+		
+		// Kiểm tra xem đã có kế hoạch cho năm này chưa
+		$check_bddk = mysql_query("SELECT id FROM ke_hoach_bao_duong_dinh_ky_iso WHERE thietbi_id='$thietbi_id_bddk' AND nam='$nam_bd'");
+		
+		if(mysql_num_rows($check_bddk) > 0) {
+			$bddk_row = mysql_fetch_array($check_bddk);
+			$bddk_id = $bddk_row['id'];
+			
+			// UPDATE: Set quý tương ứng về NULL/0
+			$update_clear_bddk = "UPDATE ke_hoach_bao_duong_dinh_ky_iso SET 
+				qui_$quy = NULL,
+				qui_{$quy}_hoantat = 0
+				WHERE id = '$bddk_id'";
+			
+			file_put_contents($log_file, "CLEAR QUERY: $update_clear_bddk\n", FILE_APPEND);
+			
+			$result = mysql_query($update_clear_bddk);
+			if(!$result) {
+				file_put_contents($log_file, "CLEAR ERROR: " . mysql_error() . "\n", FILE_APPEND);
+			} else {
+				$affected = mysql_affected_rows();
+				file_put_contents($log_file, "CLEAR affected rows: $affected\n", FILE_APPEND);
+			}
+		} else {
+			file_put_contents($log_file, "No existing plan found to clear\n", FILE_APPEND);
+		}
+	}
 }
 
 file_put_contents($log_file, "END BDDK CHECK\n\n", FILE_APPEND);
@@ -12325,32 +12361,26 @@ echo"<script type=\"text/javascript\" src=\"buttonadd_files/mbjsmbbuttonadd.js\"
 if ($cv=="KT")
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\" checked>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>";
 elseif ($cv=="BD")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" checked > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 elseif ($cv=="SC")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
-		 </span>
-	     <br><br>"; 
-elseif ($cv=="BDDK")
-		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" checked>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 else
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 echo"
@@ -12752,32 +12782,26 @@ echo "<script type=\"text/javascript\" src=\"buttonadd_files/mbjsmbbuttonadd.js\
 if ($cv=="KT")
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\" checked>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>";
 elseif ($cv=="BD")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" checked > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 elseif ($cv=="SC")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
-		 </span>
-	     <br><br>"; 
-elseif ($cv=="BDDK")
-		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" checked>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 else
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 
@@ -13908,32 +13932,26 @@ echo"</table></br>";
 */if ($cv=="KT")
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\" checked>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>";
 elseif ($cv=="BD")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" checked > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 elseif ($cv=="SC")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
-		 </span>
-	     <br><br>"; 
-elseif ($cv=="BDDK")
-		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" checked>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 else
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\">
 		 </span>
 	     <br><br>"; 
 
@@ -14207,6 +14225,23 @@ $tenthietbisql11 = mysql_query("SELECT DISTINCT stt,mamay,homay,dienap FROM thie
 			$homay=$row['homay'];
 			$dienap=$row['dienap'];
 		}
+
+// Kiểm tra xem thiết bị này có kế hoạch BDDK không để tự động check checkbox
+$bddk = ''; // Reset giá trị mặc định
+if(isset($thietbi_id) && $thietbi_id > 0) {
+	// Lấy năm từ ngày bắt đầu
+	$nam_check = isset($nams) ? (int)$nams : date('Y');
+	
+	// Kiểm tra có BDDK đã hoàn thành cho thiết bị này trong năm hiện tại không
+	$check_bddk_plan = mysql_query("SELECT id FROM ke_hoach_bao_duong_dinh_ky_iso 
+		WHERE thietbi_id='$thietbi_id' 
+		AND nam='$nam_check' 
+		AND (qui_1_hoantat=1 OR qui_2_hoantat=1 OR qui_3_hoantat=1 OR qui_4_hoantat=1)");
+	
+	if(mysql_num_rows($check_bddk_plan) > 0) {
+		$bddk = 'BDDK'; // Có BDDK đã hoàn thành → tự động check
+	}
+}
 
 $curday = date("d/m/Y");
 echo "
@@ -14482,40 +14517,49 @@ style=\"vertical-align: bottom;\" border=\"0\" alt=\"Thêm\" title=\"\" onclick=
 echo"
 <script type=\"text/javascript\" src=\"buttonadd_files/mbjsmbbuttonadd.js\"></script>
 <input type=hidden name=addvt value=\"\">";
+
+// Kiểm tra xem thiết bị có kế hoạch BDDK không (PHẢI TRƯỚC KHI TÍNH DISABLED)
+$has_bddk_plan = false;
+if(isset($thietbi_id) && $thietbi_id > 0) {
+	$check_has_plan = mysql_query("SELECT id FROM ke_hoach_bao_duong_dinh_ky_iso WHERE thietbi_id='$thietbi_id' LIMIT 1");
+	if(mysql_num_rows($check_has_plan) > 0) {
+		$has_bddk_plan = true;
+	}
+}
+
+// Tạo chuỗi disable cho checkbox BDDK nếu không có kế hoạch
+$bddk_disabled = (!$has_bddk_plan) ? " disabled title=\"Không có kế hoạch bảo dưỡng định kỳ\"" : "";
+$bddk_checked = ($bddk=="BDDK" && $has_bddk_plan) ? " checked" : "";
+
 if ($cv=="KT")
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\" checked>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\"$bddk_checked$bddk_disabled>
 		 </span>
 	     <br><br>";
 elseif ($cv=="BD")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\" checked > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\"$bddk_checked$bddk_disabled>
 		 </span>
 	     <br><br>"; 
 elseif ($cv=="SC")
 		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
-		 </span>
-	     <br><br>"; 
-elseif ($cv=="BDDK")
-		echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\" checked>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\"$bddk_checked$bddk_disabled>
 		 </span>
 	     <br><br>"; 
 else
 echo "  <span style=\"margin-left:50px;\"> <strong>IV. NỘI DUNG CÔNG VIỆC : </strong> KT<input type=\"checkbox\" name=\"cv\" value=\"KT\">
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BD<input type=\"checkbox\" name=\"cv\" value=\"BD\"  > 
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SC<input type=\"checkbox\" name=\"cv\" value=\"SC\" checked>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"cv\" value=\"BDDK\">
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDDK<input type=\"checkbox\" name=\"bddk\" value=\"BDDK\"$bddk_checked$bddk_disabled>
 		 </span>
 	     <br><br>"; 
 
 echo "<script>
-// Đảm bảo chỉ 1 checkbox cv được chọn tại một thời điểm
+// Đảm bảo chỉ 1 checkbox cv (KT, BD, SC) được chọn tại một thời điểm
+// BDDK có thể chọn độc lập
 var cvCheckboxes = document.getElementsByName('cv');
 for(var i=0; i < cvCheckboxes.length; i++) {
 	cvCheckboxes[i].addEventListener('click', function() {
@@ -14531,9 +14575,14 @@ for(var i=0; i < cvCheckboxes.length; i++) {
 </script>";
 
 // Hiển thị thông tin BDDK từ bảng ke_hoach_bao_duong_dinh_ky_iso
+// Biến $has_bddk_plan đã được set ở trước (dùng cho disabled checkbox)
+$current_year = date("Y");
+
 if(isset($thietbi_id) && $thietbi_id > 0) {
+	// Trường hợp 1: CÓ thietbi_id - Query để lấy thông tin kế hoạch
 	$bddk_query = mysql_query("SELECT * FROM ke_hoach_bao_duong_dinh_ky_iso WHERE thietbi_id='$thietbi_id' ORDER BY nam DESC LIMIT 1");
 	if($bddk_row = mysql_fetch_array($bddk_query)) {
+		// Case 1.1: CÓ kế hoạch BDDK - Hiển thị bảng chi tiết
 		$nam_bddk = $bddk_row['nam'];
 		$qui_1 = $bddk_row['qui_1'];
 		$qui_2 = $bddk_row['qui_2'];
@@ -14593,7 +14642,7 @@ if(isset($thietbi_id) && $thietbi_id > 0) {
 		</tr>
 		</table><br/>";
 	} else {
-		$current_year = date("Y");
+		// Case 1.2: CÓ thietbi_id NHƯNG KHÔNG có kế hoạch
 		echo "<table class=\"table1\" style=\"margin-left:50px;width:800px;margin-top:10px;\">
 		<tr>
 		<th style=\"text-align:center;font-size: 16;background-color:#20B2AA;\">THÔNG TIN BẢO DƯỠNG ĐỊNH KỲ - NĂM $current_year</th>
@@ -14603,6 +14652,16 @@ if(isset($thietbi_id) && $thietbi_id > 0) {
 		</tr>
 		</table><br/>";
 	}
+} else {
+	// Case 2: KHÔNG có thietbi_id - Thiết bị chưa được xác định
+	echo "<table class=\"table1\" style=\"margin-left:50px;width:800px;margin-top:10px;\">
+	<tr>
+	<th style=\"text-align:center;font-size: 16;background-color:#20B2AA;\">THÔNG TIN BẢO DƯỠNG ĐỊNH KỲ - NĂM $current_year</th>
+	</tr>
+	<tr>
+	<td style=\"text-align:center;color:orange;font-size:16px;font-weight:bold;padding:20px;\">⚠ Thiết bị chưa được xác định trong hệ thống</td>
+	</tr>
+	</table><br/>";
 }
 
 //echo "</table>";

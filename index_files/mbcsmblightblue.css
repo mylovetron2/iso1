@@ -1,0 +1,107 @@
+.ebul_mblightblue, .ebul_mblightblue ul {
+  background-color: #ECEEF4;
+  border: 1px solid #99B1D7;
+  display: block;
+  font-size: 1px;
+  margin: 0px;
+  overflow: auto;
+  padding: 2px;
+  position: absolute;
+  visibility: hidden;
+}
+
+.ebul_mblightblue_shadow {
+  background-color: #777777;
+  display: block;
+  margin: 0px;
+  overflow: hidden;
+  position: absolute;
+  visibility: hidden;
+}
+
+.ebul_mblightblue table {
+  border-collapse: separate;
+}
+
+.ebul_mblightblue tr {
+  background-color: #ECEEF4;
+  cursor: pointer;
+  font-size: 1px;
+}
+
+.ebul_mblightblue td {
+  border: 1px solid #ECEEF4;
+  padding: 3px;
+  text-align: left;
+}
+
+.ebul_mblightblue td a, .ebul_mblightblue td a:visited {
+  color: #000000;
+  font-family: "Tahoma", serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.ebul_mblightblue tr.hot, .ebul_mblightblue tr.expanded {
+  background-color: #CCDAEC;
+}
+
+.ebul_mblightblue tr.hot td, .ebul_mblightblue tr.expanded td {
+  border-color: #99B1D7;
+}
+.ebul_mblightblue tr.hot a, .ebul_mblightblue tr.expanded a {
+  color: #000000;
+  font-family: "Tahoma", serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.ebul_mblightblue td div.ebul_mblightblueseparator {
+  border-top: 1px solid #99B1D7;
+  height: 0px;
+  font-size: 0;
+}
+
+.ebul_mblightblue td.ebul_mblightblueseparatortd {
+  cursor: default;
+}
+
+
+ul.ebul_mblightblue {
+  position: absolute;
+  visibility: hidden;
+}                               
+
+.mblightblueebul_menulist .spaced_li {
+  padding: 0px 0px 2px 0px;
+}
+
+.mblightblueebul_menulist li {
+  list-style: none;
+  
+}
+
+.mblightblueebul_menulist img {
+  vertical-align: bottom;
+  
+}
+
+.mblightblueebul_menulist {
+  margin: 0px;
+  padding: 0px;
+  line-height: 0px;
+}
+span.ebul_imgmblightblue16x16 { 
+  width: 16px; 
+  height: 16px; 
+  display: block; 
+}
+
+.ebul_mblightblue tr.hot span.ebul_imgmblightblue16x16, .ebul_mblightblue tr.expanded span.ebul_imgmblightblue16x16 { 
+  background-position: 0 -16px; 
+} 
+

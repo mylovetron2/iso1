@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<ew-language date="2015/4/27" version="8.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+	<locale>
+		<phrase id="locale" value=""/><!-- *** system locale for this language -->
+		<phrase id="use_system_locale" value="1"/><!-- *** change to "0" to disable system locale and use the following settings *** -->
+		<phrase id="decimal_point" value="."/>
+		<phrase id="thousands_sep" value=","/>
+		<phrase id="mon_decimal_point" value="."/>
+		<phrase id="mon_thousands_sep" value=","/>
+		<phrase id="currency_symbol" value="$"/>
+		<phrase id="positive_sign" value=""/>
+		<phrase id="negative_sign" value="-"/>
+		<phrase id="frac_digits" value="2"/>
+		<phrase id="p_cs_precedes" value="1"/>
+		<phrase id="p_sep_by_space" value="0"/>
+		<phrase id="n_cs_precedes" value="1"/>
+		<phrase id="n_sep_by_space" value="0"/>
+		<phrase id="p_sign_posn" value="3"/>
+		<phrase id="n_sign_posn" value="3"/>
+		<phrase id="time_zone" value="US/Pacific"/><!-- *** used for multi-language site only *** -->
+	</locale>
+	<global>
+		<phrase id="allrecords" value="All"/>
+		<phrase id="alwaysask" value="Always ask for my user name and password"/>
+		<phrase id="autologin" value="Auto login until I logout explicitly"/>
+		<phrase id="backtologin" value="Back to Login Page"/>
+		<phrase id="booleanno" value="No"/>
+		<phrase id="booleanyes" value="Yes"/>
+		<phrase id="breadcrumbdivider" value="/"/>
+		<phrase id="browsernoflashsupport" value="Your browser does not support Flash player." client="1"/>
+		<phrase id="buttonexport" value="Export" class="icon-export ewIcon"/><!-- v8 -->
+		<phrase id="cancel" value="Cancel" client="1"/><!-- v8 -->
+		<phrase id="chartorder" value="Order by"/>
+		<phrase id="chartorderxasc" value="Labels ASC"/>
+		<phrase id="chartorderxdesc" value="Labels DESC"/>
+		<phrase id="chartorderyasc" value="Values ASC"/>
+		<phrase id="chartorderydesc" value="Values DESC"/>
+		<phrase id="clicktodrilldown" value="Click to drill down"/>
+		<phrase id="currentfilters" value="Current filters:"/>
+		<phrase id="deletefilter" value="Delete filter"/><!-- v8 -->
+		<phrase id="deletefilterconfirm" value="Delete filter %s?" client="1"/><!-- v8 -->
+		<phrase id="drilldownallrecords" value="All records"/>
+		<phrase id="drilldownfilters" value="Drill down filters:"/>
+		<phrase id="enterfiltername" value="Enter filter name" client="1"/><!-- v8 -->
+		<phrase id="entersenderemail" value="Please enter sender email" client="1"/>
+		<phrase id="enterpropersenderemail" value="Exceed maximum sender email count or email address incorrect" client="1"/>
+		<phrase id="enterrecipientemail" value="Please enter recipient email" client="1"/>
+		<phrase id="enterproperrecipientemail" value="Exceed maximum recipient email count or email address incorrect" client="1"/>
+		<phrase id="enterproperccemail" value="Exceed maximum cc email count or email address incorrect" client="1"/>
+		<phrase id="enterproperbccemail" value="Exceed maximum bcc email count or email address incorrect" client="1"/>
+		<phrase id="entersubject" value="Please enter subject" client="1"/>
+		<phrase id="emailformsender" value="From"/>
+		<phrase id="emailformrecipient" value="To"/>
+		<phrase id="emailformcc" value="Cc"/>
+		<phrase id="emailformbcc" value="Bcc"/>
+		<phrase id="emailformsubject" value="Subject"/>
+		<phrase id="emailformmessage" value="Message"/>
+		<phrase id="emailformcontenttype" value="Send as"/>
+		<phrase id="emailformcontenttypeurl" value="URL"/>
+		<phrase id="emailformcontenttypehtml" value="HTML"/>
+		<phrase id="emptylabel" value="(Empty)"/>
+		<phrase id="enterpassword" value="Please enter password" client="1"/>
+		<phrase id="enterpwd" value="Please enter password" client="1"/>
+		<phrase id="entersearchcriteria" value="Please enter search criteria"/>
+		<phrase id="enteruid" value="Please enter user ID" client="1"/>
+		<phrase id="entervalidatecode" value="Please enter the validation code shown" client="1"/>
+		<phrase id="exceedmaxemailexport" value="Exceed maximum export email count. Please try again later."/>
+		<phrase id="exportchart" value="Exporting chart: " client="1"/>
+		<phrase id="exportchartdata" value="Exporting chart data" client="1"/>
+		<phrase id="exportcharterror" value="Failed to export chart: " client="1"/>
+		<phrase id="exportingchart" value="Exporting chart (%c of %t), please wait..." client="1"/>
+		<phrase id="exporttoemail" value="Email" class="icon-email ewIcon" client="1"/><!-- v8 -->
+		<phrase id="exporttoexcel" value="Export to Excel" class="icon-excel ewIcon"/><!-- v8 -->
+		<phrase id="exporttopdf" value="Export to PDF" class="icon-pdf ewIcon"/><!-- v8 -->
+		<phrase id="exporttoword" value="Export to Word" class="icon-word ewIcon"/><!-- v8 -->
+		<phrase id="fieldrequiredindicator" value="&lt;span class=&quot;ewRequired&quot;&gt;&amp;nbsp;*&lt;/span&gt;"/>
+		<phrase id="filter" value="Filter"/><!-- v8 -->
+		<phrase id="filtername" value="Filter name" client="1"/><!-- v8 -->
+		<phrase id="filters" value="Filters" class="icon-filter ewIcon"/><!-- v8 -->
+		<phrase id="homepage" value="Home" class="glyphicon glyphicon-home ewIcon"/><!-- v8 -->
+		<phrase id="incorrectcreditcard" value="Incorrect credit card number" client="1"/>
+		<phrase id="incorrectdateymd" value="Incorrect date, format = yyyy%smm%sdd"/>
+		<phrase id="incorrectdatemdy" value="Incorrect date, format = mm%sdd%syyyy"/>
+		<phrase id="incorrectdatedmy" value="Incorrect date, format = dd%smm%syyyy"/>
+		<phrase id="incorrectshortdateymd" value="Incorrect date, format = yy%smm%sdd"/>
+		<phrase id="incorrectshortdatemdy" value="Incorrect date, format = mm%sdd%syy"/>
+		<phrase id="incorrectshortdatedmy" value="Incorrect date, format = dd%smm%syy"/>
+		<phrase id="incorrectemail" value="Incorrect email" client="1"/>
+		<phrase id="incorrectfield" value="Incorrect field" client="1"/>
+		<phrase id="incorrectfloat" value="Incorrect floating point number" client="1"/>
+		<phrase id="incorrectguid" value="Incorrect GUID" client="1"/>
+		<phrase id="incorrectinteger" value="Incorrect integer" client="1"/>
+		<phrase id="incorrectphone" value="Incorrect phone number" client="1"/>
+		<phrase id="incorrectrange" value="Number must be between %1 and %2" client="1"/>
+		<phrase id="incorrectregexp" value="Regular expression not matched" client="1"/>
+		<phrase id="incorrectssn" value="Incorrect Social Security Number" client="1"/>
+		<phrase id="incorrecttime" value="Incorrect time (hh:mm:ss)" client="1"/>
+		<phrase id="incorrectzip" value="Incorrect ZIP code" client="1"/>
+		<phrase id="invalidpostrequest" value="Invalid post request"/><!-- v8 -->
+		<phrase id="invaliduidpwd" value="Incorrect user ID or password"/>
+		<phrase id="language" value="Language"/>
+		<phrase id="loading" value="Loading%s..." client="1"/>
+		<phrase id="login" value="Login"/>
+		<phrase id="loginoptions" value="Options"/><!-- v8 -->
+		<phrase id="loginpage" value="Login Page"/>
+		<phrase id="logout" value="Logout"/>
+		<phrase id="mobilemenu" value="Menu"/>
+		<phrase id="monthjan" value="Jan"/>
+		<phrase id="monthfeb" value="Feb"/>
+		<phrase id="monthmar" value="Mar"/>
+		<phrase id="monthapr" value="Apr"/>
+		<phrase id="monthmay" value="May"/>
+		<phrase id="monthjun" value="Jun"/>
+		<phrase id="monthjul" value="Jul"/>
+		<phrase id="monthaug" value="Aug"/>
+		<phrase id="monthsep" value="Sep"/>
+		<phrase id="monthoct" value="Oct"/>
+		<phrase id="monthnov" value="Nov"/>
+		<phrase id="monthdec" value="Dec"/>
+		<phrase id="next" value="Next"/>
+		<phrase id="nopermission" value="You do not have permission to access the page."/>
+		<phrase id="norecord" value="No records found"/>
+		<phrase id="noreportorcharts" value="No report or charts is selected for generation. Please check your report/charts settings."/>
+		<phrase id="nodistinctcolvals" value="No distinct column values for sql: "/>
+		<phrase id="nulllabel" value="(Null)"/>
+		<phrase id="of" value="of"/>
+		<phrase id="ok" value="OK" client="1"/><!-- v8 -->
+		<phrase id="page" value="Page"/>
+		<phrase id="pagerfirst" value="First"/>
+		<phrase id="pagerlast" value="Last"/>
+		<phrase id="pagernext" value="Next"/>
+		<phrase id="pagerprevious" value="Previous"/>
+		<phrase id="password" value="Password"/>
+		<phrase id="pleaseselect" value="Please Select"/>
+		<phrase id="popupall" value="(All)" client="1"/>
+		<phrase id="popupfrom" value="From" client="1"/>
+		<phrase id="popupnovalue" value="No value selected!" client="1"/>
+		<phrase id="popupselect" value="Please Select" client="1"/>
+		<phrase id="popupto" value="To" client="1"/>
+		<phrase id="prev" value="Prev"/>
+		<phrase id="printerfriendly" value="Printer Friendly" class="icon-print ewIcon"/><!-- v8 -->
+		<phrase id="group" value="Groups"/>
+		<phrase id="groupsperpage" value="Groups per page"/>
+		<phrase id="qtr1" value="1st Quarter"/>
+		<phrase id="qtr2" value="2nd Quarter"/>
+		<phrase id="qtr3" value="3rd Quarter"/>
+		<phrase id="qtr4" value="4th Quarter"/>
+		<phrase id="record" value="Records"/>
+		<phrase id="recordsperpage" value="Records per page"/>
+		<phrase id="report" value="Reports"/>
+		<phrase id="reset" value="Reset"/>
+		<phrase id="resetallfilter" value="Reset all filters" class="icon-reset-search ewIcon"/><!-- v8 -->
+		<phrase id="resetsearch" value="Reset search criteria"/>
+		<phrase id="rptavg" value="AVG"/>
+		<phrase id="rptcnt" value="COUNT"/>
+		<phrase id="rptdtlrec" value=" detail records"/>
+		<phrase id="rptgrandsummary" value="Grand Summary"/>
+		<phrase id="rptgrandtotal" value="Grand Total"/>
+		<phrase id="rptmax" value="MAX"/>
+		<phrase id="rptmin" value="MIN"/>
+		<phrase id="rptpagesummary" value="Page Summary"/>
+		<phrase id="rptpagetotal" value="Page Total"/>
+		<phrase id="rptseparator" value=":&amp;nbsp;"/>
+		<phrase id="rptsum" value="SUM"/>
+		<phrase id="rptsumhead" value="Summary for"/>
+		<phrase id="savecurrentfilter" value="Save current filter"/>
+		<phrase id="saveusername" value="Save my user name"/>
+		<phrase id="search" value="Search"/>
+		<phrase id="searchbtn" value="Filter Panel" class="glyphicon glyphicon-search ewIcon"/>
+		<phrase id="selectall" value="(All)"/>
+		<phrase id="sendemailbtn" value="Send" client="1"/>
+		<phrase id="sendemailsuccess" value="Email sent successfully" client="1"/>
+		<phrase id="showall" value="Show all"/>
+		<phrase id="summary" value="Summary"/>
+		<phrase id="tasks" value="Tasks"/>
+		<phrase id="to" value="to"/>
+		<phrase id="top" value="Top"/>
+		<phrase id="total" value="Total"/>
+		<phrase id="username" value="User name"/>
+		<phrase id="valuenotexist" value="Value does not exist" client="1"/><!-- v8 -->
+		<phrase id="viewimage" value="Click to view image"/><!-- v8 -->
+		<phrase id="week" value="Week"/>
+		<phrase id="year" value="Year"/>
+		<!-- Search Operators -->
+		<phrase id="=" value="&amp;nbsp;"/>
+		<phrase id="&lt;&gt;" value="&amp;lt;&amp;gt;"/>
+		<phrase id="&lt;" value="&amp;lt;"/>
+		<phrase id="&lt;=" value="&amp;lt;="/>
+		<phrase id="&gt;" value="&amp;gt;"/>
+		<phrase id="&gt;=" value="&amp;gt;="/>
+		<phrase id="like" value="contains"/>
+		<phrase id="not like" value="not contains"/>
+		<phrase id="starts with" value="starts with"/>
+		<phrase id="ends with" value="ends with"/>
+		<phrase id="is null" value="is null"/>
+		<phrase id="is not null" value="is not null"/>
+		<phrase id="between" value="Từ ngày"/>
+		<phrase id="and" value="Đến ngày"/>
+		<phrase id="or" value="or"/>
+		<!-- Menu Prefix/Suffix -->
+		<phrase id="simplereportmenuitemprefix" value=""/>
+		<phrase id="simplereportmenuitemsuffix" value=""/>
+		<phrase id="detailsummaryreportmenuitemprefix" value=""/>
+		<phrase id="detailsummaryreportmenuitemsuffix" value=""/>
+		<phrase id="crosstabreportmenuitemprefix" value=""/>
+		<phrase id="crosstabreportmenuitemsuffix" value=""/>
+		<phrase id="chartreportmenuitemprefix" value=""/>
+		<phrase id="chartreportmenuitemsuffix" value=""/>
+		<!-- Advanced Filter -->
+		<phrase id="future" value="Future"/>
+		<phrase id="past" value="Past"/>
+		<phrase id="last14days" value="Last 14 days"/>
+		<phrase id="last30days" value="Last 30 days"/>
+		<phrase id="last7days" value="Last 7 days"/>
+		<phrase id="next14days" value="Next 14 days"/>
+		<phrase id="next30days" value="Next 30 days"/>
+		<phrase id="next7days" value="Next 7 days"/>
+		<phrase id="today" value="Today"/>
+		<phrase id="tomorrow" value="Tomorrow"/>
+		<phrase id="yesterday" value="Yesterday"/>
+		<phrase id="lastmonth" value="Last month"/>
+		<phrase id="nextmonth" value="Next month"/>
+		<phrase id="thismonth" value="This month"/>
+		<phrase id="lasttwoweeks" value="Last two weeks"/>
+		<phrase id="lastweek" value="Last week"/>
+		<phrase id="nexttwoweeks" value="Next two weeks"/>
+		<phrase id="nextweek" value="Next week"/>
+		<phrase id="thisweek" value="This week"/>
+		<phrase id="lastyear" value="Last year"/>
+		<phrase id="nextyear" value="Next year"/>
+		<phrase id="thisyear" value="This year"/>
+	</global>
+	<project><phrase id="footertext" value="2015 Logging and Testing Division . "/>
+<menu id="7"><phrase id="menutext" value="view 2"/>
+</menu>
+<menu id="6"><phrase id="menutext" value="Report 1"/>
+</menu>
+<menu id="1"><phrase id="menutext" value="jos kunena groups"/>
+</menu>
+<menu id="2"><phrase id="menutext" value="view 1"/>
+</menu>
+<table id="baocao"/>
+<table id="baocaothietbi"/>
+<table id="baoduong"/>
+<table id="bophan"/>
+<table id="chamcong"/>
+<table id="chamcong_giocongdm"/>
+<table id="danhmucthietbihc"/>
+<table id="danhmucvattu_iso"/>
+<table id="doi"/>
+<table id="donvi_iso"/>
+<table id="donvivtinh"/>
+<table id="hosochungchi"/>
+<table id="hosocvk_iso"/>
+<table id="hososcbd_iso"/>
+<table id="jos_banner"/>
+<table id="jos_bannerclient"/>
+<table id="jos_bannertrack"/>
+<table id="jos_categories"/>
+<table id="jos_comment"/>
+<table id="jos_comment_captcha"/>
+<table id="jos_comment_setting"/>
+<table id="jos_comment_voting"/>
+<table id="jos_components"/>
+<table id="jos_contact_details"/>
+<table id="jos_content"/>
+<table id="jos_content_frontpage"/>
+<table id="jos_content_rating"/>
+<table id="jos_core_acl_aro"/>
+<table id="jos_core_acl_aro_groups"/>
+<table id="jos_core_acl_aro_map"/>
+<table id="jos_core_acl_aro_sections"/>
+<table id="jos_core_acl_groups_aro_map"/>
+<table id="jos_core_log_items"/>
+<table id="jos_core_log_searches"/>
+<table id="jos_groups"/>
+<table id="jos_jcomments"/>
+<table id="jos_jcomments_custom_bbcodes"/>
+<table id="jos_jcomments_reports"/>
+<table id="jos_jcomments_settings"/>
+<table id="jos_jcomments_subscriptions"/>
+<table id="jos_jcomments_version"/>
+<table id="jos_jcomments_votes"/>
+<table id="jos_kunena_announcement"/>
+<table id="jos_kunena_attachments"/>
+<table id="jos_kunena_categories"/>
+<table id="jos_kunena_config"/>
+<table id="jos_kunena_config_backup"/>
+<table id="jos_kunena_favorites"/>
+<table id="jos_kunena_groups"><phrase id="tblcaption" value="jos kunena groups"/>
+<field id="id"><phrase id="fldcaption" value="id"/>
+</field>
+<field id="title"><phrase id="fldcaption" value="title"/>
+</field>
+</table>
+<table id="jos_kunena_messages"/>
+<table id="jos_kunena_messages_text"/>
+<table id="jos_kunena_moderation"/>
+<table id="jos_kunena_polls"/>
+<table id="jos_kunena_polls_options"/>
+<table id="jos_kunena_polls_users"/>
+<table id="jos_kunena_ranks"/>
+<table id="jos_kunena_sessions"/>
+<table id="jos_kunena_smileys"/>
+<table id="jos_kunena_subscriptions"/>
+<table id="jos_kunena_subscriptions_categories"/>
+<table id="jos_kunena_thankyou"/>
+<table id="jos_kunena_users"/>
+<table id="jos_kunena_users_banned"/>
+<table id="jos_kunena_version"/>
+<table id="jos_kunena_whoisonline"/>
+<table id="jos_menu"/>
+<table id="jos_menu_types"/>
+<table id="jos_messages"/>
+<table id="jos_messages_cfg"/>
+<table id="jos_migration_backlinks"/>
+<table id="jos_modules"/>
+<table id="jos_modules_menu"/>
+<table id="jos_newsfeeds"/>
+<table id="jos_plugins"/>
+<table id="jos_poll_data"/>
+<table id="jos_poll_date"/>
+<table id="jos_poll_menu"/>
+<table id="jos_polls"/>
+<table id="jos_sections"/>
+<table id="jos_session"/>
+<table id="jos_stats_agents"/>
+<table id="jos_templates_menu"/>
+<table id="jos_users"/>
+<table id="jos_weblinks"/>
+<table id="jos_wf_profiles"/>
+<table id="khach"/>
+<table id="loaithietbi"/>
+<table id="logview"/>
+<table id="nghiphep"/>
+<table id="resume"/>
+<table id="resumebackup"/>
+<table id="tenthietbi"/>
+<table id="thietbi"/>
+<table id="thietbi_iso"/>
+<table id="thietbihotro_iso"/>
+<table id="userbl"/>
+<table id="users"/>
+<table id="view1"><phrase id="tblcaption" value="view 1"/>
+<field id="maql"><phrase id="fldcaption" value="Yêu Cầu DV"/>
+</field>
+<field id="hoso"><phrase id="fldcaption" value="Số Hồ Sơ"/>
+</field>
+<field id="mavt"><phrase id="fldcaption" value="Tên Máy"/>
+</field>
+<field id="somay"><phrase id="fldcaption" value="Số Máy"/>
+</field>
+<field id="cv"><phrase id="fldcaption" value="Công Việc"/>
+</field>
+<field id="ngayth"><phrase id="fldcaption" value="Ngày Thực Hiện"/>
+</field>
+<field id="ngaykt"><phrase id="fldcaption" value="Ngày Kết Thúc"/>
+</field>
+<field id="ngth"><phrase id="fldcaption" value="Nhân Viên"/>
+</field>
+<field id="ttktafter"><phrase id="fldcaption" value="TTKT"/>
+</field>
+<field id="ghichu"><phrase id="fldcaption" value="Ghi Chú"/>
+</field>
+<field id="stt"><phrase id="fldcaption" value="stt"/>
+</field>
+<field id="lydo"><phrase id="fldcaption" value="lydo"/>
+</field>
+<field id="ngayyc"><phrase id="fldcaption" value="ngayyc"/>
+</field>
+<field id="madv"><phrase id="fldcaption" value="madv"/>
+</field>
+<field id="phieu"><phrase id="fldcaption" value="phieu"/>
+</field>
+<field id="solg"><phrase id="fldcaption" value="solg"/>
+</field>
+<field id="ngyeucau"><phrase id="fldcaption" value="ngyeucau"/>
+</field>
+<field id="ngnhyeucau"><phrase id="fldcaption" value="ngnhyeucau"/>
+</field>
+<field id="ttktbefore"><phrase id="fldcaption" value="ttktbefore"/>
+</field>
+<field id="honghoc"><phrase id="fldcaption" value="honghoc"/>
+</field>
+<field id="khacphuc"><phrase id="fldcaption" value="khacphuc"/>
+</field>
+<field id="vattusc"><phrase id="fldcaption" value="vattusc"/>
+</field>
+<field id="ndbaoduong"><phrase id="fldcaption" value="ndbaoduong"/>
+</field>
+<field id="tbdosc"><phrase id="fldcaption" value="tbdosc"/>
+</field>
+<field id="serialtbdosc"><phrase id="fldcaption" value="serialtbdosc"/>
+</field>
+<field id="tbdosc1"><phrase id="fldcaption" value="tbdosc 1"/>
+</field>
+<field id="serialtbdosc1"><phrase id="fldcaption" value="serialtbdosc 1"/>
+</field>
+<field id="tbdosc2"><phrase id="fldcaption" value="tbdosc 2"/>
+</field>
+<field id="serialtbdosc2"><phrase id="fldcaption" value="serialtbdosc 2"/>
+</field>
+<field id="serialtbdosc3"><phrase id="fldcaption" value="serialtbdosc 3"/>
+</field>
+<field id="tbdosc3"><phrase id="fldcaption" value="tbdosc 3"/>
+</field>
+<field id="tbdosc4"><phrase id="fldcaption" value="tbdosc 4"/>
+</field>
+<field id="serialtbdosc4"><phrase id="fldcaption" value="serialtbdosc 4"/>
+</field>
+<field id="chiphi"><phrase id="fldcaption" value="chiphi"/>
+</field>
+<field id="nhomsc"><phrase id="fldcaption" value="nhomsc"/>
+</field>
+</table>
+<table id="report1"><phrase id="tblcaption" value="Report 1"/>
+<field id="hoso"><phrase id="fldcaption" value="hoso"/>
+</field>
+<field id="mavt"><phrase id="fldcaption" value="mavt"/>
+</field>
+<field id="cv"><phrase id="fldcaption" value="cv"/>
+</field>
+<field id="somay"><phrase id="fldcaption" value="somay"/>
+</field>
+</table>
+<table id="view2"><phrase id="tblcaption" value="view 2"/>
+<field id="stt"><phrase id="fldcaption" value="stt"/>
+</field>
+<field id="mavt"><phrase id="fldcaption" value="Tên Máy"/>
+</field>
+<field id="somay"><phrase id="fldcaption" value="Số Máy"/>
+</field>
+<field id="hoso"><phrase id="fldcaption" value="Số Hồ Sơ"/>
+</field>
+<field id="ngaykt"><phrase id="fldcaption" value="Ngày Kết Thúc"/>
+</field>
+<field id="honghoc"><phrase id="fldcaption" value="Hỏng Hóc"/>
+</field>
+<field id="khacphuc"><phrase id="fldcaption" value="Khắc Phục"/>
+</field>
+<field id="ghichu"><phrase id="fldcaption" value="Ghi Chú"/>
+</field>
+</table>
+</project>
+</ew-language>

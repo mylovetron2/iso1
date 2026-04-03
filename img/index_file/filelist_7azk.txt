@@ -1,0 +1,11 @@
+C:\Users\Admin\Desktop\vd\index_files\ebab_mbmcp.png
+C:\Users\Admin\Desktop\vd\index_files\mb_home.png
+C:\Users\Admin\Desktop\vd\index_files\mb_products.png
+C:\Users\Admin\Desktop\vd\index_files\mb_purchase.png
+C:\Users\Admin\Desktop\vd\index_files\mb_support.png
+C:\Users\Admin\Desktop\vd\index_files\mb_company.png
+C:\Users\Admin\Desktop\vd\index_files\ebab_mbmcp_c.png
+C:\Users\Admin\Desktop\vd\index_files\mbjsmbmcp.js
+C:\Users\Admin\Desktop\vd\index_files\mbcsmbmcp.css
+C:\Users\Admin\Desktop\vd\index.htm
+C:\Users\Admin\Desktop\vd\index_files\filelist_7azk.txt

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0"?>
+<configuration date="2015/04/25" author="e.World Technology Ltd.">
+<project id="{69C90C1F-7050-4E67-A35E-0A836A956F1F}" file="C:\Users\Admin\Documents\PHPReportMaker\Projects\project3.prp" name="project3" product="PHPReportMaker" version="8.0" datetime="2015/04/25 09:46:02" languagefolder="phprptlang" userlevel="0,&quot;Default&quot;,0">
+<table id="baocao" name="baocao" caption="baocao" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="baocaothietbi" name="baocaothietbi" caption="baocaothietbi" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="baoduong" name="baoduong" caption="baoduong" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="bophan" name="bophan" caption="bophan" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="chamcong" name="chamcong" caption="chamcong" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="chamcong_giocongdm" name="chamcong_giocongdm" caption="chamcong giocongdm" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="danhmucthietbihc" name="danhmucthietbihc" caption="danhmucthietbihc" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="danhmucvattu_iso" name="danhmucvattu_iso" caption="danhmucvattu iso" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="doi" name="doi" caption="doi" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="donvi_iso" name="donvi_iso" caption="donvi iso" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="donvivtinh" name="donvivtinh" caption="donvivtinh" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="hosochungchi" name="hosochungchi" caption="hosochungchi" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="hosocvk_iso" name="hosocvk_iso" caption="hosocvk iso" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="hososcbd_iso" name="hososcbd_iso" caption="hososcbd iso" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_banner" name="jos_banner" caption="jos banner" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_bannerclient" name="jos_bannerclient" caption="jos bannerclient" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_bannertrack" name="jos_bannertrack" caption="jos bannertrack" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_categories" name="jos_categories" caption="jos categories" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_comment" name="jos_comment" caption="jos comment" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_comment_captcha" name="jos_comment_captcha" caption="jos comment captcha" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_comment_setting" name="jos_comment_setting" caption="jos comment setting" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_comment_voting" name="jos_comment_voting" caption="jos comment voting" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_components" name="jos_components" caption="jos components" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_contact_details" name="jos_contact_details" caption="jos contact details" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_content" name="jos_content" caption="jos content" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_content_frontpage" name="jos_content_frontpage" caption="jos content frontpage" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_content_rating" name="jos_content_rating" caption="jos content rating" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_acl_aro" name="jos_core_acl_aro" caption="jos core acl aro" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_acl_aro_groups" name="jos_core_acl_aro_groups" caption="jos core acl aro groups" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_acl_aro_map" name="jos_core_acl_aro_map" caption="jos core acl aro map" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_acl_aro_sections" name="jos_core_acl_aro_sections" caption="jos core acl aro sections" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_acl_groups_aro_map" name="jos_core_acl_groups_aro_map" caption="jos core acl groups aro map" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_log_items" name="jos_core_log_items" caption="jos core log items" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_core_log_searches" name="jos_core_log_searches" caption="jos core log searches" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_groups" name="jos_groups" caption="jos groups" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments" name="jos_jcomments" caption="jos jcomments" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments_custom_bbcodes" name="jos_jcomments_custom_bbcodes" caption="jos jcomments custom bbcodes" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments_reports" name="jos_jcomments_reports" caption="jos jcomments reports" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments_settings" name="jos_jcomments_settings" caption="jos jcomments settings" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments_subscriptions" name="jos_jcomments_subscriptions" caption="jos jcomments subscriptions" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments_version" name="jos_jcomments_version" caption="jos jcomments version" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_jcomments_votes" name="jos_jcomments_votes" caption="jos jcomments votes" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_announcement" name="jos_kunena_announcement" caption="jos kunena announcement" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_attachments" name="jos_kunena_attachments" caption="jos kunena attachments" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_categories" name="jos_kunena_categories" caption="jos kunena categories" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_config" name="jos_kunena_config" caption="jos kunena config" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_config_backup" name="jos_kunena_config_backup" caption="jos kunena config backup" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_favorites" name="jos_kunena_favorites" caption="jos kunena favorites" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_groups" name="jos_kunena_groups" caption="jos kunena groups" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_messages" name="jos_kunena_messages" caption="jos kunena messages" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_messages_text" name="jos_kunena_messages_text" caption="jos kunena messages text" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_moderation" name="jos_kunena_moderation" caption="jos kunena moderation" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_polls" name="jos_kunena_polls" caption="jos kunena polls" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_polls_options" name="jos_kunena_polls_options" caption="jos kunena polls options" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_polls_users" name="jos_kunena_polls_users" caption="jos kunena polls users" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_ranks" name="jos_kunena_ranks" caption="jos kunena ranks" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_sessions" name="jos_kunena_sessions" caption="jos kunena sessions" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_smileys" name="jos_kunena_smileys" caption="jos kunena smileys" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_subscriptions" name="jos_kunena_subscriptions" caption="jos kunena subscriptions" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_subscriptions_categories" name="jos_kunena_subscriptions_categories" caption="jos kunena subscriptions categories" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_thankyou" name="jos_kunena_thankyou" caption="jos kunena thankyou" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_users" name="jos_kunena_users" caption="jos kunena users" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_users_banned" name="jos_kunena_users_banned" caption="jos kunena users banned" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_version" name="jos_kunena_version" caption="jos kunena version" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_kunena_whoisonline" name="jos_kunena_whoisonline" caption="jos kunena whoisonline" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_menu" name="jos_menu" caption="jos menu" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_menu_types" name="jos_menu_types" caption="jos menu types" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_messages" name="jos_messages" caption="jos messages" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_messages_cfg" name="jos_messages_cfg" caption="jos messages cfg" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_migration_backlinks" name="jos_migration_backlinks" caption="jos migration backlinks" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_modules" name="jos_modules" caption="jos modules" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_modules_menu" name="jos_modules_menu" caption="jos modules menu" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_newsfeeds" name="jos_newsfeeds" caption="jos newsfeeds" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_plugins" name="jos_plugins" caption="jos plugins" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_poll_data" name="jos_poll_data" caption="jos poll data" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_poll_date" name="jos_poll_date" caption="jos poll date" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_poll_menu" name="jos_poll_menu" caption="jos poll menu" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_polls" name="jos_polls" caption="jos polls" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_sections" name="jos_sections" caption="jos sections" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_session" name="jos_session" caption="jos session" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_stats_agents" name="jos_stats_agents" caption="jos stats agents" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_templates_menu" name="jos_templates_menu" caption="jos templates menu" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_users" name="jos_users" caption="jos users" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_weblinks" name="jos_weblinks" caption="jos weblinks" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="jos_wf_profiles" name="jos_wf_profiles" caption="jos wf profiles" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="khach" name="khach" caption="khach" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="loaithietbi" name="loaithietbi" caption="loaithietbi" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="logview" name="logview" caption="logview" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="nghiphep" name="nghiphep" caption="nghiphep" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="resume" name="resume" caption="resume" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="resumebackup" name="resumebackup" caption="resumebackup" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="tenthietbi" name="tenthietbi" caption="tenthietbi" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="thietbi" name="thietbi" caption="thietbi" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="thietbi_iso" name="thietbi_iso" caption="thietbi iso" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="thietbihotro_iso" name="thietbihotro_iso" caption="thietbihotro iso" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="userbl" name="userbl" caption="userbl" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="users" name="users" caption="users" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="view1" name="view1" caption="view 1" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="view2" name="view2" caption="view 2" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="Report1" name="Report1" caption="Report 1" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+</project></configuration>

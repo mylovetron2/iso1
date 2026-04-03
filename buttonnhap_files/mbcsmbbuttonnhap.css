@@ -1,0 +1,98 @@
+.ebul_mbbuttonnhap, .ebul_mbbuttonnhap ul {
+  background-color: #FFFFFF;
+  border: 0px solid #FFFFFF;
+  display: block;
+  font-size: 1px;
+  margin: 0px;
+  overflow: auto;
+  padding: 0px;
+  position: absolute;
+  visibility: hidden;
+}
+
+.ebul_mbbuttonnhap_shadow {
+  background-color: #777777;
+  display: block;
+  margin: 0px;
+  overflow: hidden;
+  position: absolute;
+  visibility: hidden;
+}
+
+.ebul_mbbuttonnhap table {
+  border-collapse: separate;
+}
+
+.ebul_mbbuttonnhap tr {
+  background-color: #FFFFFF;
+  cursor: pointer;
+  font-size: 1px;
+}
+
+.ebul_mbbuttonnhap td {
+  border: 0px solid #FFFFFF;
+  padding: 0px;
+  text-align: left;
+}
+
+.ebul_mbbuttonnhap td a, .ebul_mbbuttonnhap td a:visited {
+  color: #000000;
+  font-family: "Tahoma", serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.ebul_mbbuttonnhap tr.hot, .ebul_mbbuttonnhap tr.expanded {
+  background-color: #C0C0C0;
+}
+
+.ebul_mbbuttonnhap tr.hot td, .ebul_mbbuttonnhap tr.expanded td {
+  border-color: #8C8C8C;
+}
+.ebul_mbbuttonnhap tr.hot a, .ebul_mbbuttonnhap tr.expanded a {
+  color: #000000;
+  font-family: "Tahoma", serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.ebul_mbbuttonnhap td div.ebul_mbbuttonnhapseparator {
+  border-top: 1px solid #646464;
+  border-bottom: 1px solid #C0C0C0;
+  height: 0px;
+  font-size: 0;
+}
+
+.ebul_mbbuttonnhap td.ebul_mbbuttonnhapseparatortd {
+  cursor: default;
+}
+
+
+ul.ebul_mbbuttonnhap {
+  position: absolute;
+  visibility: hidden;
+}                               
+
+.mbbuttonnhapebul_menulist .spaced_li {
+  padding: 0px 1px 0px 0px;
+}
+
+.mbbuttonnhapebul_menulist li {
+  list-style: none;
+  float: left;
+}
+
+.mbbuttonnhapebul_menulist img {
+  vertical-align: bottom;
+  
+}
+
+.mbbuttonnhapebul_menulist {
+  margin: 0px;
+  padding: 0px;
+  line-height: 0px;
+}

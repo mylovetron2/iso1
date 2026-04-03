@@ -1,0 +1,160 @@
+/*******************************Calendar Top Navigation*********************************/
+div#calendar{
+  margin:0px auto;
+  padding:0px;
+  width: 268px;
+  font-family:Helvetica, "Times New Roman", Times, serif;
+}
+ 
+div#calendar div.box{
+    position:relative;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:20px;
+    background-color:   #B45F04 ;      
+}
+ 
+div#calendar div.header{
+    line-height:20px;  
+    vertical-align:middle;
+    position:absolute;
+    left:11px;
+    top:0px;
+    width:240px;
+    height:20px;   
+    text-align:center;
+}
+ 
+div#calendar div.header a.prev,div#calendar div.header a.next{ 
+    position:absolute;
+    top:0px;   
+    height: 17px;
+    display:block;
+    cursor:pointer;
+    text-decoration:none;
+    color:#FFF;
+}
+ 
+div#calendar div.header span.title{
+    color:#FFBF00;
+    font-size:16px;
+}
+ 
+ 
+div#calendar div.header a.prev{
+    left:0px;
+}
+ 
+div#calendar div.header a.next{
+    right:0px;
+}
+ 
+ 
+ 
+ 
+/*******************************Calendar Content Cells*********************************/
+div#calendar div.box-content{
+    border:1px solid #787878 ;
+    border-top:none;
+}
+ 
+ 
+ 
+div#calendar ul.label{
+    float:left;
+    margin: 0px;
+    padding: 0px;
+    margin-top:5px;
+    margin-left: 5px;
+}
+ 
+div#calendar ul.label li{
+    margin:0px;
+    padding:0px;
+    margin-right:5px;  
+    float:left;
+    list-style-type:none;
+    width:32px;
+    height:20px;
+    line-height:20px;
+    vertical-align:middle;
+    text-align:center;
+    color:#000;
+    font-size: 15px;
+    background-color: #B45F04;
+}
+ 
+ 
+div#calendar ul.dates{
+    float:left;
+    margin: 0px;
+    padding: 0px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+ 
+/** overall width = width+padding-right**/
+div#calendar ul.dates li{
+    margin:0px;
+    padding:0px;
+    margin-right:5px;
+    margin-top: 5px;
+    line-height:30px;
+    vertical-align:middle;
+    float:left;
+    list-style-type:none;
+    width:30px;
+    height:30px;
+    font-size:15px;
+    background-color: #FFF;
+    color:#B45F04;
+    text-align:center;
+    border-style:solid;
+    border-color:#B45F04;
+    border-width:1px;
+   
+}
+.customselect {
+    width: 30px;
+    overflow: hidden;
+}
+
+.customselect select {
+   width: 48px;
+   margin-top: 5px;
+   margin-left: 2px;
+   -moz-appearance: none;
+   -webkit-appearance: none;
+   appearance: none;
+}
+.button {
+    width:5px	
+    border: 1px solid #006;
+    background: #ccf;
+}
+.button:hover {
+    width:5px	
+    border: 1px solid #f00;
+    background: #eef;
+}
+.table4
+{
+border-collapse:collapse;
+width 100% ;
+}
+.table4 th 
+{
+border:1px solid black;
+background-color:#A7C942;
+color:#ffffff;
+font-weight: bold;
+}
+  
+focus{
+    outline:none;
+}
+ 
+div.clear{
+    clear:both;
+}     

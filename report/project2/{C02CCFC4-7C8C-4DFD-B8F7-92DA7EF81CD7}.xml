@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<configuration date="2015/04/27" author="e.World Technology Ltd.">
+<project id="{C02CCFC4-7C8C-4DFD-B8F7-92DA7EF81CD7}" file="C:\Users\Admin\Documents\PHPReportMaker\Projects\project2.prp" name="project2" product="PHPReportMaker" version="8.0" datetime="2015/04/27 10:06:56" languagefolder="phprptlang" userlevel="0,&quot;Default&quot;,0">
+<table id="jos_kunena_groups" name="jos_kunena_groups" caption="jos kunena groups" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="view1" name="view1" caption="view 1" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="Report1" name="Report1" caption="Report 1" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+<table id="view2" name="view2" caption="view 2" userlevel="0,&quot;Default&quot;,0" priv="1"/>
+</project></configuration>

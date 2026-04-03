@@ -1,0 +1,36 @@
+.table
+{
+border-collapse:collapse;
+width:100% ;
+font-family:Times New Roman;
+}
+.table td
+{
+text-align:left;
+border:1px solid black;
+height: 30px
+}
+.table th 
+{
+font-weight: bold;
+	  background-color:#F8F8FF; background: url(images/linear_bg_2.png); background-repeat: repeat-x; /* Safari 4-5, Chrome 1-9 */ background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F8F8FF), to(#E6E6FA)); /* Safari 5.1, Chrome 10+ */ background: -webkit-linear-gradient(top,  	#E6E6FA, #F8F8FF); /* Firefox 3.6+ */ background: -moz-linear-gradient(top,  	#E6E6FA, #F8F8FF); /* IE 10 */ background: -ms-linear-gradient(top, #E6E6FA, #F8F8FF); /* Opera 11.10+ */ background: -o-linear-gradient(top, #F5F5F5, #F8F8FF);
+}
+.table1
+{
+border-collapse:collapse;
+width:100%;
+}
+.table1 td
+{
+border:1px solid black;
+text-align:left;
+height: 30px
+}
+.table1 th 
+{
+border:1px solid black;
+color:#ffffff;
+font-weight: bold;
+height:50px;
+background-color: #6495ED;
+}
