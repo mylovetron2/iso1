@@ -700,55 +700,34 @@ echo"   <form method=\"post\" action=\"formsc.php\" enctype=\"multipart/form-dat
 
 // XỬ LÝ TẠM DỪNG / TIẾP TỤC HỒ SƠ
 if ($action_tamdung == 'tamdung' && $hosomay != '') {
-    // DEBUG: Kiểm tra giá trị
-    error_log("DEBUG TAMDUNG: action=$action_tamdung, hosomay=$hosomay, username=$username");
-    echo "<script>console.log('PHP Processing: action_tamdung=$action_tamdung, hosomay=$hosomay');</script>";
+    // Kiểm tra xem hồ sơ có đang tạm dừng không
+    $check_tamdung = mysql_query("SELECT COUNT(*) as cnt FROM hososcbd_tamdung WHERE hoso='$hosomay' AND trangthai='dang_tam_dung'");
+    $row_check = mysql_fetch_array($check_tamdung);
     
-    // Kiểm tra xem bảng có tồn tại không
-    $check_table = mysql_query("SHOW TABLES LIKE 'hososcbd_tamdung'");
-    if (!$check_table || mysql_num_rows($check_table) == 0) {
-        echo "<script>alert('LỖI: Bảng hososcbd_tamdung chưa được tạo!\\n\\nHãy mở phpMyAdmin và chạy file create_tamdung_table.sql');</script>";
-        error_log("ERROR: Table hososcbd_tamdung does not exist!");
+    if ($row_check['cnt'] > 0) {
+        echo "<script>alert('Hồ sơ này đã đang trong trạng thái tạm dừng!');</script>";
     } else {
-        // Kiểm tra xem hồ sơ có đang tạm dừng không
-        $check_tamdung = mysql_query("SELECT COUNT(*) as cnt FROM hososcbd_tamdung WHERE hoso='$hosomay' AND trangthai='dang_tam_dung'");
-        $row_check = mysql_fetch_array($check_tamdung);
+        // Lấy thông tin hồ sơ
+        $info_sql = mysql_query("SELECT mavt, somay, model, maql FROM hososcbd_iso WHERE hoso='$hosomay' LIMIT 1");
+        $info = mysql_fetch_array($info_sql);
         
-        if ($row_check['cnt'] > 0) {
-            echo "<script>alert('Hồ sơ này đã đang trong trạng thái tạm dừng!');</script>";
-        } else {
-            // Lấy thông tin hồ sơ
-            $info_sql = mysql_query("SELECT mavt, somay, model, maql FROM hososcbd_iso WHERE hoso='$hosomay' LIMIT 1");
-            $info = mysql_fetch_array($info_sql);
+        if ($info) {
+            $lydo_esc = mysql_real_escape_string($lydo_tamdung);
+            $username_esc = mysql_real_escape_string($username);
             
-            if ($info) {
-                $lydo_esc = mysql_real_escape_string($lydo_tamdung);
-                $username_esc = mysql_real_escape_string($username);
-                
-                // Insert vào bảng tạm dừng
-                $insert_tamdung = "INSERT INTO hososcbd_tamdung (
-                    hoso, mavt, somay, model, maql,
-                    ngay_tamdung, nguoi_tamdung, lydo_tamdung, trangthai
-                ) VALUES (
-                    '$hosomay', '{$info['mavt']}', '{$info['somay']}', '{$info['model']}', '{$info['maql']}',
-                    NOW(), '$username_esc', '$lydo_esc', 'dang_tam_dung'
-                )";
-                
-                error_log("DEBUG SQL: " . $insert_tamdung);
-                
-                if (mysql_query($insert_tamdung)) {
-                    echo "<script>
-                        alert('Đã tạm dừng hồ sơ $hosomay thành công!\\nLý do: $lydo_tamdung');
-                        window.location.href = 'formsc.php?edithoso=$hosomay&username=$username&mk=$password';
-                    </script>";
-                    exit;
-                } else {
-                    $error_msg = mysql_error();
-                    echo "<script>alert('Lỗi khi tạm dừng hồ sơ:\\n\\n$error_msg\\n\\nKiểm tra console để xem chi tiết.');</script>";
-                    error_log("ERROR: " . $error_msg);
-                }
+            // Insert vào bảng tạm dừng
+            $insert_tamdung = "INSERT INTO hososcbd_tamdung (
+                hoso, mavt, somay, model, maql,
+                ngay_tamdung, nguoi_tamdung, lydo_tamdung, trangthai
+            ) VALUES (
+                '$hosomay', '{$info['mavt']}', '{$info['somay']}', '{$info['model']}', '{$info['maql']}',
+                NOW(), '$username_esc', '$lydo_esc', 'dang_tam_dung'
+            )";
+            
+            if (mysql_query($insert_tamdung)) {
+                echo "<script>alert('Đã tạm dừng hồ sơ $hosomay thành công!\\nLý do: $lydo_tamdung');</script>";
             } else {
-                echo "<script>alert('Không tìm thấy thông tin hồ sơ: $hosomay');</script>";
+                echo "<script>alert('Lỗi khi tạm dừng hồ sơ: " . mysql_error() . "');</script>";
             }
         }
     }
@@ -779,11 +758,7 @@ if ($action_tamdung == 'tieptuc' && $hosomay != '') {
             LIMIT 1";
         
         if (mysql_query($update_tieptuc)) {
-            echo "<script>
-                alert('Đã tiếp tục hồ sơ $hosomay thành công!');
-                window.location.href = 'formsc.php?edithoso=$hosomay&username=$username&mk=$password';
-            </script>";
-            exit;
+            echo "<script>alert('Đã tiếp tục hồ sơ $hosomay thành công!');</script>";
         } else {
             echo "<script>alert('Lỗi khi tiếp tục hồ sơ: " . mysql_error() . "');</script>";
         }
@@ -5974,19 +5949,6 @@ while($row = mysql_fetch_array($tenthietbisql13))
 	$dienap=$row['dienap'];
 }
 
-// Kiểm tra xem hồ sơ có đang tạm dừng không
-$is_tamdung = false;
-$tamdung_info = array();
-// Sử dụng $edithoso (từ URL) hoặc $hosomay (từ POST)
-$hoso_check = ($edithoso != '') ? $edithoso : $hosomay;
-$check_tamdung_sql = mysql_query("SELECT * FROM hososcbd_tamdung WHERE hoso='$hoso_check' AND trangthai='dang_tam_dung' ORDER BY ngay_tamdung DESC LIMIT 1");
-if ($check_tamdung_sql && mysql_num_rows($check_tamdung_sql) > 0) {
-    $is_tamdung = true;
-    $tamdung_info = mysql_fetch_array($check_tamdung_sql);
-}
-// DEBUG: Hiển thị trạng thái
-echo "<!-- DEBUG: edithoso=$edithoso, hosomay=$hosomay, hoso_check=$hoso_check, is_tamdung=" . ($is_tamdung ? 'TRUE' : 'FALSE') . ", rows=" . ($check_tamdung_sql ? mysql_num_rows($check_tamdung_sql) : 'ERROR') . " -->";
-
 $curday = date("d/m/Y");
 echo "
 <html lang=\"vi\">
@@ -6002,65 +5964,9 @@ tinymce.init({
 selector: \"textarea\"   
 }); 
 </script>
-<style>
-.alert-tamdung {
-    background-color: #fff3cd;
-    border: 2px solid #ffc107;
-    border-left: 5px solid #ff9800;
-    padding: 15px 20px;
-    margin: 0;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: 100%;
-    box-sizing: border-box;
-}
-.alert-tamdung h3 {
-    color: #856404;
-    margin-top: 0;
-    margin-bottom: 12px;
-    line-height: 1.4;
-    font-size: 18px;
-}
-.alert-tamdung p {
-    margin: 3px 0;
-    padding: 2px 0;
-    color: #856404;
-    line-height: 1.4;
-    font-size: 14px;
-}
-.alert-tamdung strong {
-    color: #e65100;
-}
-.btn-tamdung {
-    background-color: #ff9800;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 5px;
-}
-.btn-tamdung:hover {
-    background-color: #f57c00;
-}
-.btn-tieptuc {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 5px;
-}
-.btn-tieptuc:hover {
-    background-color: #45a049;
-}
-</style>
 </head>
 <body>
-<table style=\"width:100%; margin-top:20px;\">
+<table style=\"width:100%\">
 <tr>
 <td >
 <h2> <p style=\"text-align:center;color:blue;\"> PHIẾU THỰC HIỆN CÔNG VIỆC <br/></h2>
@@ -6068,30 +5974,8 @@ selector: \"textarea\"
 </td>
 </tr>
 </table>
-<br/>";
-
-// Hiển thị cảnh báo nếu hồ sơ đang tạm dừng
-if ($is_tamdung) {
-    $ngay_tamdung = date('d/m/Y H:i', strtotime($tamdung_info['ngay_tamdung']));
-    $nguoi_tamdung = $tamdung_info['nguoi_tamdung'];
-    $lydo_tamdung = $tamdung_info['lydo_tamdung'];
-    $thoigian_td_gio = round((time() - strtotime($tamdung_info['ngay_tamdung'])) / 3600, 1);
-    $thoigian_td_ngay = round($thoigian_td_gio / 24, 1);
-    
-    echo "<table class=\"table7\" style=\"margin-left:50px; margin-bottom:20px;\">
-    <tr><td>
-        <div class=\"alert-tamdung\">
-            <h3>⚠️ CẢNH BÁO: HỒ SƠ ĐANG TẠM DỪNG</h3>
-            <p><strong>Thời gian tạm dừng:</strong> $ngay_tamdung</p>
-            <p><strong>Người tạm dừng:</strong> $nguoi_tamdung</p>
-            <p><strong>Lý do tạm dừng:</strong> $lydo_tamdung</p>
-            <p><strong>Đã tạm dừng:</strong> <span style=\"color:#e74c3c;font-weight:bold;\">$thoigian_td_ngay ngày ($thoigian_td_gio giờ)</span></p>
-        </div>
-    </td></tr>
-    </table>";
-}
-
-echo "<form method=\"post\" action=\"formsc.php\" enctype=\"multipart/form-data\" name=\"example\">
+<br/>
+<form method=\"post\" action=\"formsc.php\" enctype=\"multipart/form-data\" name=\"example\">
 <table class=\"table7\" style=\"margin-left:50px;\">
 <tr>
 <td style=\"text-align:left;color:black;font-size: 18;width:300px;padding-left:20px;background-color:#FFE4B5;\"> <strong>Mã quản lý</strong> </td>
@@ -7428,22 +7312,15 @@ for($j=1;$j<=20;$j++){
 echo"</table><br/>";
 */
 
-// Nút toggle hiển thị quản lý trạng thái (create form)
-echo "<div style=\"margin-left:50px; margin-bottom:10px;\">
-    <button onclick=\"toggleQuanLyTrangThaiCreate()\" style=\"background-color:#dc3545; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:17px; font-weight:bold;\">
-        <span id=\"toggle-icon-create\">▼</span> Quản lý trạng thái hồ sơ (Tạm dừng/Tiếp tục)
-    </button>
-</div>";
-
-// Hiển thị các nút tạm dừng/tiếp tục (mặc định ẩn)
-echo "<div id=\"quan-ly-trang-thai-create\" style=\"margin-left:50px; margin-bottom:20px; padding:15px; background-color:#f5f5f5; border-radius:5px; display:none;\">";
+// Hiển thị các nút tạm dừng/tiếp tục
+echo "<div style=\"margin-left:50px; margin-bottom:20px; padding:15px; background-color:#f5f5f5; border-radius:5px;\">";
 if ($is_tamdung) {
     // Nếu đang tạm dừng → hiển thị nút tiếp tục
     echo "<h3 style=\"color:#e65100;\">⏸ Hồ sơ đang tạm dừng - Bạn có muốn tiếp tục?</h3>
     <form method=\"post\" action=\"formsc.php\" style=\"display:inline-block;\" onsubmit=\"return confirmTieptuc();\">
         <input type=\"hidden\" name=\"username\" value=\"$username\">
         <input type=\"hidden\" name=\"password\" value=\"$password\">
-        <input type=\"hidden\" name=\"hosomay\" value=\"$hoso_check\">
+        <input type=\"hidden\" name=\"hosomay\" value=\"$hosomay\">
         <input type=\"hidden\" name=\"action_tamdung\" value=\"tieptuc\">
         <label for=\"ghichu_tieptuc\"><strong>Ghi chú khi tiếp tục:</strong></label><br/>
         <textarea name=\"ghichu_tieptuc\" id=\"ghichu_tieptuc\" rows=\"2\" cols=\"50\" placeholder=\"Nhập ghi chú (không bắt buộc)\" style=\"margin-top:5px;\"></textarea><br/>
@@ -7460,10 +7337,10 @@ if ($is_tamdung) {
     <form method=\"post\" action=\"formsc.php\" style=\"display:inline-block;\" onsubmit=\"return confirmTamdung();\">
         <input type=\"hidden\" name=\"username\" value=\"$username\">
         <input type=\"hidden\" name=\"password\" value=\"$password\">
-        <input type=\"hidden\" name=\"hosomay\" value=\"$hoso_check\">
+        <input type=\"hidden\" name=\"hosomay\" value=\"$hosomay\">
         <input type=\"hidden\" name=\"action_tamdung\" value=\"tamdung\">
         <label for=\"lydo_tamdung\"><strong>Lý do tạm dừng:</strong> <span style=\"color:red;\">*</span></label><br/>
-        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" style=\"margin-top:5px;\"></textarea><br/>
+        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" required style=\"margin-top:5px;\"></textarea><br/>
         <button type=\"submit\" class=\"btn-tamdung\" style=\"margin-top:10px;\">⏸ TẠM DỪNG HỒ SƠ</button>
     </form>
     <script>
@@ -7478,20 +7355,6 @@ if ($is_tamdung) {
     </script>";
 }
 echo "</div>";
-
-echo "<script>
-function toggleQuanLyTrangThaiCreate() {
-    var element = document.getElementById('quan-ly-trang-thai-create');
-    var icon = document.getElementById('toggle-icon-create');
-    if (element.style.display === 'none') {
-        element.style.display = 'block';
-        icon.innerHTML = '▲';
-    } else {
-        element.style.display = 'none';
-        icon.innerHTML = '▼';
-    }
-}
-</script>";
 
 echo"
 <table align=\"center\">
@@ -14527,25 +14390,18 @@ selector: \"textarea\"
     border: 2px solid #ffc107;
     border-left: 5px solid #ff9800;
     padding: 15px 20px;
-    margin: 0;
+    margin: 20px 50px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: 100%;
-    box-sizing: border-box;
 }
 .alert-tamdung h3 {
     color: #856404;
     margin-top: 0;
-    margin-bottom: 12px;
-    line-height: 1.4;
-    font-size: 18px;
+    margin-bottom: 10px;
 }
 .alert-tamdung p {
-    margin: 3px 0;
-    padding: 2px 0;
+    margin: 5px 0;
     color: #856404;
-    line-height: 1.4;
-    font-size: 14px;
 }
 .alert-tamdung strong {
     color: #e65100;
@@ -14579,7 +14435,7 @@ selector: \"textarea\"
 </style>
 </head>
 <body>
-<table style=\"width:100%; margin-top:20px;\">
+<table style=\"width:100%\">
 <tr>
 <td >
 <h2> <p style=\"text-align:center;color:blue;\"> PHIẾU THỰC HIỆN CÔNG VIỆC <br/></h2>
@@ -14597,85 +14453,14 @@ if ($is_tamdung) {
     $thoigian_td_gio = round((time() - strtotime($tamdung_info['ngay_tamdung'])) / 3600, 1);
     $thoigian_td_ngay = round($thoigian_td_gio / 24, 1);
     
-    echo "<table class=\"table7\" style=\"margin-left:50px; margin-bottom:20px;\">
-    <tr><td>
-        <div class=\"alert-tamdung\">
-            <h3>⚠️ CẢNH BÁO: HỒ SƠ ĐANG TẠM DỪNG</h3>
-            <p><strong>Thời gian tạm dừng:</strong> $ngay_tamdung</p>
-            <p><strong>Người tạm dừng:</strong> $nguoi_tamdung</p>
-            <p><strong>Lý do tạm dừng:</strong> $lydo_tamdung</p>
-            <p><strong>Đã tạm dừng:</strong> <span style=\"color:#e74c3c;font-weight:bold;\">$thoigian_td_ngay ngày ($thoigian_td_gio giờ)</span></p>
-        </div>
-    </td></tr>
-    </table>";
+    echo "<div class=\"alert-tamdung\">
+        <h3>⚠️ CẢNH BÁO: HỒ SƠ ĐANG TẠM DỪNG</h3>
+        <p><strong>Thời gian tạm dừng:</strong> $ngay_tamdung</p>
+        <p><strong>Người tạm dừng:</strong> $nguoi_tamdung</p>
+        <p><strong>Lý do tạm dừng:</strong> $lydo_tamdung</p>
+        <p><strong>Đã tạm dừng:</strong> <span style=\"color:#e74c3c;font-weight:bold;\">$thoigian_td_ngay ngày ($thoigian_td_gio giờ)</span></p>
+    </div>";
 }
-
-// Nút toggle hiển thị quản lý trạng thái
-echo "<div style=\"margin-left:50px; margin-bottom:10px;\">
-    <button onclick=\"toggleQuanLyTrangThai()\" style=\"background-color:#dc3545; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:17px; font-weight:bold;\">
-        <span id=\"toggle-icon\">▼</span> Quản lý trạng thái hồ sơ (Tạm dừng/Tiếp tục)
-    </button>
-</div>";
-
-// Hiển thị các nút tạm dừng/tiếp tục (mặc định ẩn)
-echo "<div id=\"quan-ly-trang-thai\" style=\"margin-left:50px; margin-bottom:20px; padding:15px; background-color:#f5f5f5; border-radius:5px; display:none;\">";
-if ($is_tamdung) {
-    echo "<h3 style=\"color:#e65100;\">⏸ Hồ sơ đang tạm dừng - Bạn có muốn tiếp tục?</h3>
-    <form method=\"post\" action=\"formsc.php?edithoso=$edithoso&username=$username&mk=$password\" style=\"display:inline-block;\" onsubmit=\"return confirmTieptucEdit();\">
-        <input type=\"hidden\" name=\"username\" value=\"$username\">
-        <input type=\"hidden\" name=\"password\" value=\"$password\">
-        <input type=\"hidden\" name=\"hosomay\" value=\"$edithoso\">
-        <input type=\"hidden\" name=\"action_tamdung\" value=\"tieptuc\">
-        <label for=\"ghichu_tieptuc_edit\"><strong>Ghi chú khi tiếp tục:</strong></label><br/>
-        <textarea name=\"ghichu_tieptuc\" id=\"ghichu_tieptuc_edit\" rows=\"2\" cols=\"50\" placeholder=\"Nhập ghi chú (không bắt buộc)\" style=\"margin-top:5px;\"></textarea><br/>
-        <button type=\"submit\" class=\"btn-tieptuc\" style=\"margin-top:10px;\">▶ TIẾP TỤC HỒ SƠ</button>
-    </form>
-    <script>
-    function confirmTieptucEdit() {
-        return confirm('Bạn có chắc muốn tiếp tục hồ sơ này?\\n\\nHồ sơ sẽ được đánh dấu là đã tiếp tục và bạn có thể làm việc bình thường.');
-    }
-    </script>";
-} else {
-    echo "<h3 style=\"color:#1976d2;\">⚙️ Quản lý trạng thái hồ sơ</h3>
-    <form method=\"post\" action=\"formsc.php?edithoso=$edithoso&username=$username&mk=$password\" style=\"display:inline-block;\" onsubmit=\"console.log('Form submitting...'); return confirmTamdungEdit();\">
-        <input type=\"hidden\" name=\"username\" value=\"$username\">
-        <input type=\"hidden\" name=\"password\" value=\"$password\">
-        <input type=\"hidden\" name=\"hosomay\" value=\"$edithoso\">
-        <input type=\"hidden\" name=\"action_tamdung\" value=\"tamdung\">
-        <label for=\"lydo_tamdung_edit\"><strong>Lý do tạm dừng:</strong> <span style=\"color:red;\">*</span></label><br/>
-        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung_edit\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" style=\"margin-top:5px;\"></textarea><br/>
-        <button type=\"submit\" class=\"btn-tamdung\" style=\"margin-top:10px;\">⏸ TẠM DỪNG HỒ SƠ</button>
-    </form>
-    <script>
-    function confirmTamdungEdit() {
-        console.log('confirmTamdungEdit called');
-        var lydo = document.getElementById('lydo_tamdung_edit').value.trim();
-        console.log('Lý do:', lydo);
-        if (lydo === '') {
-            alert('Vui lòng nhập lý do tạm dừng!');
-            return false;
-        }
-        var result = confirm('Bạn có chắc muốn tạm dừng hồ sơ này?\\n\\nLý do: ' + lydo + '\\n\\nHồ sơ sẽ được đánh dấu là đang tạm dừng.');
-        console.log('Confirm result:', result);
-        return result;
-    }
-    </script>";
-}
-echo "</div>";
-
-echo "<script>
-function toggleQuanLyTrangThai() {
-    var element = document.getElementById('quan-ly-trang-thai');
-    var icon = document.getElementById('toggle-icon');
-    if (element.style.display === 'none') {
-        element.style.display = 'block';
-        icon.innerHTML = '▲';
-    } else {
-        element.style.display = 'none';
-        icon.innerHTML = '▼';
-    }
-}
-</script>";
 
 echo "<form method=\"post\" action=\"formsc.php\" enctype=\"multipart/form-data\" name=\"example\">
 <table class=\"table7\" style=\"margin-left:50px;\">
