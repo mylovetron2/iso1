@@ -136,6 +136,8 @@ if ($_GET['s'] && $_GET['f']) {
 			$to = substr($to,$p);
 				}
 			$month_string  = "WHERE ngaykt BETWEEN '$yfrom-$mfrom-$dfrom 00:00:00' AND '$yto-$mto-$dto 00:00:00' ";
+			// ISO2: Loại trừ tất cả thiết bị đang tạm dừng khỏi báo cáo
+			$exclude_tamdung = "AND hoso NOT IN (SELECT hoso FROM hososcbd_tamdung WHERE trangthai='dang_tam_dung' AND id IN (SELECT MAX(id) FROM hososcbd_tamdung GROUP BY hoso))";
 			$tenfile="BCSX-$mto-$yto";
 			$ngayt="$dfrom/$mfrom/$yfrom";
 			$ngayd="$dto/$mto/$yto";
@@ -145,6 +147,8 @@ if ($_GET['s'] && $_GET['f']) {
 			$m = date('m');
 			$y = date('Y');
 			$month_string = "WHERE ngaykt BETWEEN '$y-$m-01 00:00:00' AND '$y-$m-31 00:00:00'";
+			// ISO2: Loại trừ tất cả thiết bị đang tạm dừng khỏi báo cáo
+			$exclude_tamdung = "AND hoso NOT IN (SELECT hoso FROM hososcbd_tamdung WHERE trangthai='dang_tam_dung' AND id IN (SELECT MAX(id) FROM hososcbd_tamdung GROUP BY hoso))";
 			$tenfile="BCSX-$m-$y";
 			$ngayt="01/$m/$y";
 			$ngayd="31/$m/$y";
@@ -267,21 +271,25 @@ echo"  <tr>
 	 
     $sqlmaql=mysql_query("SELECT DISTINCT maql  FROM hososcbd_iso  $month_string $where_search and nhomsc='CNC' ");
 	 */
-    $sqlmaql=mysql_query("SELECT DISTINCT maql  FROM hososcbd_iso  $month_string $where_search or ngayth!='0000-00-00' and ngaykt ='0000-00-00' order by nhomsc desc,`hoso` desc");
+    $sqlmaql=mysql_query("SELECT DISTINCT maql  FROM hososcbd_iso  $month_string $exclude_tamdung $where_search or ngayth!='0000-00-00' and ngaykt ='0000-00-00' $exclude_tamdung order by nhomsc desc,`hoso` desc");
 		$stt=1;	
     while($row= mysql_fetch_array($sqlmaql))
 	{
 	$maql=$row['maql'];
+	        $tsum=0;	
+			$sql="SELECT `maql`,`hoso`,`mavt`,`somay`,`madv`,`cv`,`model`,`honghoc`,`ghichufinal`,date_format(`ngayth`,'%d/%m/%Y') as ngayth,date_format(`ngaykt`,'%d/%m/%Y') as ngaykt,datediff(ngaykt,ngayth) as ngaysc,`ttktafter` FROM `hososcbd_iso` $month_string $exclude_tamdung and ngayth!='0000-00-00' and maql='$maql' $where_search or ngaykt='0000-00-00' and ngayth!='0000-00-00' and maql='$maql' $where_search $exclude_tamdung ORDER by hoso";
+//$sql="SELECT `maql`,`hoso`,`mavt`,`somay`,`madv`,`cv`,`model`,`honghoc`,date_format(`ngayth`,'%d/%m/%Y') as ngayth,date_format(`ngaykt`,'%d/%m/%Y') as ngaykt,datediff(ngaykt,ngayth) as ngaysc,`ttktafter` FROM `hososcbd_iso` $month_string and maql='$maql'  $where_search and ngaykt!='0000-00-00' ORDER by hoso";
+//$sql="SELECT `maql`,`hoso`,`mavt`,`somay`,`madv`,`cv`,`model`,`honghoc`,date_format(`ngayth`,'%d/%m/%Y') as ngayth,date_format(`ngaykt`,'%d/%m/%Y') as ngaykt,datediff(ngaykt,ngayth) as ngaysc,`ttktafter` FROM `hososcbd_iso` $month_string and maql='$maql'  $where_search or ngayth!='0000-00-00' and ngaykt ='0000-00-00' ORDER by hoso";
+$result = mysql_query($sql);
+// Kiểm tra xem có hồ sơ nào sau khi lọc tạm dừng không
+if(mysql_num_rows($result) == 0) {
+	continue; // Bỏ qua maql này nếu không có hồ sơ
+}
 echo"   <tr>
     <td style=\"text-align:center\">&nbsp;$stt </td>
     <td colspan=\"10\">&nbsp; $maql</td>
     </tr>";
     $stt++;
-	        $tsum=0;	
-			$sql="SELECT `maql`,`hoso`,`mavt`,`somay`,`madv`,`cv`,`model`,`honghoc`,`ghichufinal`,date_format(`ngayth`,'%d/%m/%Y') as ngayth,date_format(`ngaykt`,'%d/%m/%Y') as ngaykt,datediff(ngaykt,ngayth) as ngaysc,`ttktafter` FROM `hososcbd_iso` $month_string  and ngayth!='0000-00-00' and maql='$maql' $where_search or ngaykt='0000-00-00' and ngayth!='0000-00-00' and maql='$maql' $where_search ORDER by hoso";
-//$sql="SELECT `maql`,`hoso`,`mavt`,`somay`,`madv`,`cv`,`model`,`honghoc`,date_format(`ngayth`,'%d/%m/%Y') as ngayth,date_format(`ngaykt`,'%d/%m/%Y') as ngaykt,datediff(ngaykt,ngayth) as ngaysc,`ttktafter` FROM `hososcbd_iso` $month_string and maql='$maql'  $where_search and ngaykt!='0000-00-00' ORDER by hoso";
-//$sql="SELECT `maql`,`hoso`,`mavt`,`somay`,`madv`,`cv`,`model`,`honghoc`,date_format(`ngayth`,'%d/%m/%Y') as ngayth,date_format(`ngaykt`,'%d/%m/%Y') as ngaykt,datediff(ngaykt,ngayth) as ngaysc,`ttktafter` FROM `hososcbd_iso` $month_string and maql='$maql'  $where_search or ngayth!='0000-00-00' and ngaykt ='0000-00-00' ORDER by hoso";
-$result = mysql_query($sql);
 $i=1;
 $ghichu="";
 while($row = mysql_fetch_array($result))

@@ -188,11 +188,22 @@ if ($tieptuc_action == 'tieptuc' && $hoso_tieptuc != '') {
 $filter_nhom = isset($_POST['filter_nhom']) ? $_POST['filter_nhom'] : '';
 $filter_mavt = isset($_POST['filter_mavt']) ? $_POST['filter_mavt'] : '';
 $filter_maql = isset($_POST['filter_maql']) ? $_POST['filter_maql'] : '';
+$filter_trangthai = isset($_POST['filter_trangthai']) ? $_POST['filter_trangthai'] : 'dang_tam_dung'; // Mặc định hiển thị đang tạm dừng
+
+// Xác định tiêu đề báo cáo
+if ($filter_trangthai == 'da_tiep_tuc') {
+    $report_title = "LỊCH SỬ HỒ SƠ ĐÃ TIẾP TỤC";
+    $report_subtitle = "(Các hồ sơ đã được tiếp tục sau khi tạm dừng)";
+} else {
+    $report_title = "DANH SÁCH HỒ SƠ ĐANG TẠM DỪNG";
+    $report_subtitle = "(Các hồ sơ đang trong trạng thái tạm dừng)";
+}
 
 // Header
 echo "<div class=\"header-title\">
     <h1>XN ĐỊA VẬT LÝ GK</h1>
-    <h2>BÁO CÁO DANH SÁCH HỒ SƠ ĐANG TẠM DỪNG</h2>
+    <h2>BÁO CÁO $report_title</h2>
+    <p style=\"font-size:14px; color:#7f8c8d;\">$report_subtitle</p>
     <p>Ngày xuất báo cáo: " . date('d/m/Y H:i:s') . "</p>
 </div>";
 
@@ -203,6 +214,19 @@ echo "<form method=\"post\" action=\"baocao_tamdung.php\">
 <div class=\"filter-section\">
     <h3 style=\"margin-top:0;\">Bộ lọc</h3>
     <table>
+        <tr>
+            <td colspan=\"4\" style=\"background-color:#fff; padding:10px; border-radius:3px; margin-bottom:10px;\">
+                <strong>Trạng thái hồ sơ:</strong> &nbsp;&nbsp;
+                <label style=\"margin-right:20px; cursor:pointer;\">
+                    <input type=\"radio\" name=\"filter_trangthai\" value=\"dang_tam_dung\" " . ($filter_trangthai == 'dang_tam_dung' ? 'checked' : '') . " onchange=\"this.form.submit()\">
+                    <span style=\"color:#e74c3c; font-weight:bold;\">⚠️ Đang tạm dừng</span>
+                </label>
+                <label style=\"cursor:pointer;\">
+                    <input type=\"radio\" name=\"filter_trangthai\" value=\"da_tiep_tuc\" " . ($filter_trangthai == 'da_tiep_tuc' ? 'checked' : '') . " onchange=\"this.form.submit()\">
+                    <span style=\"color:#27ae60; font-weight:bold;\">✅ Lịch sử (đã tiếp tục)</span>
+                </label>
+            </td>
+        </tr>
         <tr>
             <td style=\"width:150px;\"><strong>Nhóm sửa chữa:</strong></td>
             <td>
@@ -232,7 +256,7 @@ echo "<form method=\"post\" action=\"baocao_tamdung.php\">
 </form>";
 
 // Tạo điều kiện WHERE cho query
-$where_conditions = array("td.trangthai = 'dang_tam_dung'");
+$where_conditions = array("td.trangthai = '" . mysql_real_escape_string($filter_trangthai) . "'");
 
 if ($filter_nhom != '') {
     $filter_nhom_esc = mysql_real_escape_string($filter_nhom);
@@ -251,7 +275,7 @@ if ($filter_maql != '') {
 
 $where_clause = implode(' AND ', $where_conditions);
 
-// Query lấy dữ liệu hồ sơ đang tạm dừng
+// Query lấy dữ liệu hồ sơ theo trạng thái
 $query = "SELECT 
     td.id,
     td.hoso,
@@ -265,8 +289,24 @@ $query = "SELECT
     td.ngay_tamdung,
     td.nguoi_tamdung,
     td.lydo_tamdung,
+    td.ngay_tieptuc,
+    td.nguoi_tieptuc,
+    td.ghichu_tieptuc,
+    td.thoigian_tamdung_gio,
+    td.thoigian_tamdung_ngay,";
+
+// Nếu đang tạm dừng, tính thời gian real-time, còn nếu đã tiếp tục thì lấy từ DB
+if ($filter_trangthai == 'dang_tam_dung') {
+    $query .= "
     TIMESTAMPDIFF(HOUR, td.ngay_tamdung, NOW()) as thoigian_gio,
-    ROUND(TIMESTAMPDIFF(HOUR, td.ngay_tamdung, NOW()) / 24, 2) as thoigian_ngay,
+    ROUND(TIMESTAMPDIFF(HOUR, td.ngay_tamdung, NOW()) / 24, 2) as thoigian_ngay,";
+} else {
+    $query .= "
+    td.thoigian_tamdung_gio as thoigian_gio,
+    td.thoigian_tamdung_ngay as thoigian_ngay,";
+}
+
+$query .= "
     hs.cv as cong_viec,
     hs.ngayth as ngay_batdau,
     hs.ngaykt as ngay_ketthuc,
@@ -281,10 +321,17 @@ $result = mysql_query($query);
 $total_rows = mysql_num_rows($result);
 
 // Hiển thị thống kê
-echo "<div class=\"summary-box\">
-    <h3>📊 THỐNG KÊ TỔNG QUAN</h3>
-    <p><strong>Tổng số hồ sơ đang tạm dừng:</strong> <span class=\"text-danger\">$total_rows</span> hồ sơ</p>
-</div>";
+if ($filter_trangthai == 'dang_tam_dung') {
+    echo "<div class=\"summary-box\">
+        <h3>📊 THỐNG KÊ TỔNG QUAN</h3>
+        <p><strong>Tổng số hồ sơ đang tạm dừng:</strong> <span class=\"text-danger\">$total_rows</span> hồ sơ</p>
+    </div>";
+} else {
+    echo "<div class=\"summary-box\">
+        <h3>📊 THỐNG KÊ TỔNG QUAN</h3>
+        <p><strong>Tổng số hồ sơ đã tiếp tục:</strong> <span class=\"text-warning\">$total_rows</span> hồ sơ</p>
+    </div>";
+}
 
 if ($total_rows > 0) {
     echo "<div class=\"table-container\">
@@ -300,7 +347,17 @@ if ($total_rows > 0) {
                 <th style=\"width:80px;\">Nhóm SC</th>
                 <th style=\"width:120px;\">Ngày tạm dừng</th>
                 <th style=\"width:100px;\">Người tạm dừng</th>
-                <th style=\"width:200px;\">Lý do tạm dừng</th>
+                <th style=\"width:200px;\">Lý do tạm dừng</th>";
+    
+    // Thêm cột cho lịch sử (đã tiếp tục)
+    if ($filter_trangthai == 'da_tiep_tuc') {
+        echo "
+                <th style=\"width:120px;\">Ngày tiếp tục</th>
+                <th style=\"width:100px;\">Người tiếp tục</th>
+                <th style=\"width:200px;\">Ghi chú tiếp tục</th>";
+    }
+    
+    echo "
                 <th style=\"width:100px;\">Thời gian<br/>tạm dừng</th>
                 <th style=\"width:80px;\">Trạng thái</th>
                 <th style=\"width:120px;\">Thao tác</th>
@@ -325,13 +382,28 @@ if ($total_rows > 0) {
         $thoigian_gio = $row['thoigian_gio'];
         $thoigian_ngay = $row['thoigian_ngay'];
         
+        // Thông tin tiếp tục (nếu có)
+        $ngay_tieptuc = $row['ngay_tieptuc'] ? date('d/m/Y H:i', strtotime($row['ngay_tieptuc'])) : '';
+        $nguoi_tieptuc = $row['nguoi_tieptuc'];
+        $ghichu_tieptuc = $row['ghichu_tieptuc'];
+        
         // Định dạng thời gian tạm dừng
         if ($thoigian_ngay >= 1) {
             $thoigian_display = "<span class=\"text-danger\">" . number_format($thoigian_ngay, 1) . " ngày</span>";
             $status_class = "status-danger";
+            $status_text = "TẠM DỪNG";
         } else {
             $thoigian_display = "<span class=\"text-warning\">$thoigian_gio giờ</span>";
             $status_class = "status-warning";
+            $status_text = "TẠM DỪNG";
+        }
+        
+        // Trạng thái cho lịch sử
+        if ($filter_trangthai == 'da_tiep_tuc') {
+            $status_class = "status-warning";
+            $status_text = "ĐÃ TIẾP TỤC";
+            // Với lịch sử, hiển thị thời gian tạm dừng đã lưu
+            $thoigian_display = number_format($thoigian_ngay, 1) . " ngày<br/>($thoigian_gio giờ)";
         }
         
         echo "<tr>
@@ -344,9 +416,23 @@ if ($total_rows > 0) {
             <td class=\"text-center\">$nhom_suachua</td>
             <td class=\"text-center\">$ngay_tamdung</td>
             <td>$nguoi_tamdung</td>
-            <td>$lydo_tamdung</td>
+            <td>$lydo_tamdung</td>";
+        
+        // Hiển thị thông tin tiếp tục (chỉ cho lịch sử)
+        if ($filter_trangthai == 'da_tiep_tuc') {
+            echo "
+            <td class=\"text-center\">$ngay_tieptuc</td>
+            <td>$nguoi_tieptuc</td>
+            <td>$ghichu_tieptuc</td>";
+        }
+        
+        echo "
             <td class=\"text-center\">$thoigian_display</td>
-            <td class=\"text-center\"><span class=\"$status_class\">TẠM DỪNG</span></td>
+            <td class=\"text-center\"><span class=\"$status_class\">$status_text</span></td>";
+        
+        // Hiển thị thao tác (chỉ cho đang tạm dừng)
+        if ($filter_trangthai == 'dang_tam_dung') {
+            echo "
             <td class=\"text-center\">
                 <a href=\"formsc.php?edithoso=$hoso&username=$username&mk=$password\" class=\"btn btn-info\" title=\"Xem/Sửa hồ sơ\">📝 Sửa</a>
                 <form method=\"post\" action=\"baocao_tamdung.php\" style=\"display:inline;\" onsubmit=\"return confirm('Bạn có chắc muốn tiếp tục hồ sơ này không?');\">
@@ -355,10 +441,22 @@ if ($total_rows > 0) {
                     <input type=\"hidden\" name=\"hoso_tieptuc\" value=\"$hoso\">
                     <input type=\"hidden\" name=\"tieptuc_action\" value=\"tieptuc\">
                     <input type=\"hidden\" name=\"ghichu_tieptuc\" value=\"Tiếp tục từ báo cáo\">
+                    <input type=\"hidden\" name=\"filter_trangthai\" value=\"$filter_trangthai\">
+                    <input type=\"hidden\" name=\"filter_nhom\" value=\"$filter_nhom\">
+                    <input type=\"hidden\" name=\"filter_mavt\" value=\"$filter_mavt\">
+                    <input type=\"hidden\" name=\"filter_maql\" value=\"$filter_maql\">
                     <button type=\"submit\" class=\"btn btn-success\" title=\"Tiếp tục hồ sơ\">▶ Tiếp tục</button>
                 </form>
-            </td>
-        </tr>";
+            </td>";
+        } else {
+            // Cho lịch sử, chỉ hiển thị nút xem
+            echo "
+            <td class=\"text-center\">
+                <a href=\"formsc.php?edithoso=$hoso&username=$username&mk=$password\" class=\"btn btn-info\" title=\"Xem hồ sơ\">👁 Xem</a>
+            </td>";
+        }
+        
+        echo "</tr>";
         
         $stt++;
     }
@@ -367,10 +465,17 @@ if ($total_rows > 0) {
     </table>
     </div>";
 } else {
-    echo "<div style=\"text-align:center; padding:40px; background-color:#d4edda; color:#155724; border-radius:5px;\">
-        <h3>✅ KHÔNG CÓ HỒ SƠ NÀO ĐANG TẠM DỪNG</h3>
-        <p>Tất cả các hồ sơ sửa chữa đang được thực hiện bình thường.</p>
-    </div>";
+    if ($filter_trangthai == 'dang_tam_dung') {
+        echo "<div style=\"text-align:center; padding:40px; background-color:#d4edda; color:#155724; border-radius:5px;\">
+            <h3>✅ KHÔNG CÓ HỒ SƠ NÀO ĐANG TẠM DỪNG</h3>
+            <p>Tất cả các hồ sơ sửa chữa đang được thực hiện bình thường.</p>
+        </div>";
+    } else {
+        echo "<div style=\"text-align:center; padding:40px; background-color:#fff3cd; color:#856404; border-radius:5px;\">
+            <h3>📝 CHƯA CÓ LỊCH SỬ TẠM DỪNG/TIẾP TỤC</h3>
+            <p>Chưa có hồ sơ nào được tạm dừng và tiếp tục.</p>
+        </div>";
+    }
 }
 
 // Nút quay lại

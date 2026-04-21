@@ -710,11 +710,11 @@ if ($action_tamdung == 'tamdung' && $hosomay != '') {
         echo "<script>alert('LỖI: Bảng hososcbd_tamdung chưa được tạo!\\n\\nHãy mở phpMyAdmin và chạy file create_tamdung_table.sql');</script>";
         error_log("ERROR: Table hososcbd_tamdung does not exist!");
     } else {
-        // Kiểm tra xem hồ sơ có đang tạm dừng không
-        $check_tamdung = mysql_query("SELECT COUNT(*) as cnt FROM hososcbd_tamdung WHERE hoso='$hosomay' AND trangthai='dang_tam_dung'");
+        // ISO2: Kiểm tra record MỚI NHẤT của hồ sơ có đang tạm dừng không
+        $check_tamdung = mysql_query("SELECT trangthai FROM hososcbd_tamdung WHERE hoso='$hosomay' ORDER BY id DESC LIMIT 1");
         $row_check = mysql_fetch_array($check_tamdung);
         
-        if ($row_check['cnt'] > 0) {
+        if ($row_check && $row_check['trangthai'] == 'dang_tam_dung') {
             echo "<script>alert('Hồ sơ này đã đang trong trạng thái tạm dừng!');</script>";
         } else {
             // Lấy thông tin hồ sơ
@@ -728,10 +728,12 @@ if ($action_tamdung == 'tamdung' && $hosomay != '') {
                 // Insert vào bảng tạm dừng
                 $insert_tamdung = "INSERT INTO hososcbd_tamdung (
                     hoso, mavt, somay, model, maql,
-                    ngay_tamdung, nguoi_tamdung, lydo_tamdung, trangthai
+                    ngay_tamdung, nguoi_tamdung, lydo_tamdung, 
+                    nguoi_thuchien, ngay_thuchien, trangthai
                 ) VALUES (
                     '$hosomay', '{$info['mavt']}', '{$info['somay']}', '{$info['model']}', '{$info['maql']}',
-                    NOW(), '$username_esc', '$lydo_esc', 'dang_tam_dung'
+                    NOW(), '$username_esc', '$lydo_esc',
+                    '$username_esc', NOW(), 'dang_tam_dung'
                 )";
                 
                 error_log("DEBUG SQL: " . $insert_tamdung);
@@ -755,37 +757,91 @@ if ($action_tamdung == 'tamdung' && $hosomay != '') {
 }
 
 if ($action_tamdung == 'tieptuc' && $hosomay != '') {
-    // Kiểm tra xem hồ sơ có đang tạm dừng không
-    $check_tamdung = mysql_query("SELECT COUNT(*) as cnt FROM hososcbd_tamdung WHERE hoso='$hosomay' AND trangthai='dang_tam_dung'");
-    $row_check = mysql_fetch_array($check_tamdung);
+    // =====================================
+    // ISO2 INSERT PATTERN: Tạo record mới khi tiếp tục
+    // =====================================
     
-    if ($row_check['cnt'] == 0) {
+    // DEBUG: Kiểm tra variables
+    error_log("DEBUG TIEPTUC START: action=$action_tamdung, hosomay=$hosomay, username=$username");
+    $ghichu_js = str_replace(array("\r", "\n", "'", '"'), array('', ' ', "\\'", '\\"'), $ghichu_tieptuc);
+    echo "<script>console.log('TIEPTUC: action_tamdung=$action_tamdung, hosomay=$hosomay, ghichu_tieptuc=$ghichu_js');</script>";
+    
+    // Lấy thông tin pause event (record mới nhất đang tạm dừng)
+    $get_pause_event = mysql_query("SELECT * FROM hososcbd_tamdung 
+        WHERE hoso='$hosomay' AND trangthai='dang_tam_dung'
+        ORDER BY id DESC LIMIT 1");
+    
+    error_log("DEBUG TIEPTUC: Found " . mysql_num_rows($get_pause_event) . " pause records");
+    
+    if (!$get_pause_event || mysql_num_rows($get_pause_event) == 0) {
         echo "<script>alert('Hồ sơ này không trong trạng thái tạm dừng!');</script>";
+        error_log("DEBUG TIEPTUC: No pause record found for hoso=$hosomay");
     } else {
+        $pause_info = mysql_fetch_array($get_pause_event);
         $ghichu_esc = mysql_real_escape_string($ghichu_tieptuc);
         $username_esc = mysql_real_escape_string($username);
         
-        // Cập nhật trạng thái tiếp tục
-        $update_tieptuc = "UPDATE hososcbd_tamdung 
-            SET ngay_tieptuc = NOW(),
-                nguoi_tieptuc = '$username_esc',
-                ghichu_tieptuc = '$ghichu_esc',
-                trangthai = 'da_tiep_tuc',
-                thoigian_tamdung_gio = TIMESTAMPDIFF(HOUR, ngay_tamdung, NOW()),
-                thoigian_tamdung_ngay = ROUND(TIMESTAMPDIFF(HOUR, ngay_tamdung, NOW()) / 24, 2)
-            WHERE hoso = '$hosomay' 
-              AND trangthai = 'dang_tam_dung'
-            ORDER BY ngay_tamdung DESC 
-            LIMIT 1";
+        // Tính thời gian tạm dừng từ record pause
+        $ngay_tamdung = $pause_info['ngay_tamdung'];
         
-        if (mysql_query($update_tieptuc)) {
+        // Copy fields cơ bản từ pause record
+        $mavt = mysql_real_escape_string($pause_info['mavt']);
+        $somay = mysql_real_escape_string($pause_info['somay']);
+        $model = mysql_real_escape_string($pause_info['model']);
+        $maql = mysql_real_escape_string($pause_info['maql']);
+        
+        // INSERT record TIẾP TỤC mới (ISO2 Event-Sourcing pattern) - CHỈ CÁC CỘT TỒN TẠI
+        $insert_tieptuc = "INSERT INTO hososcbd_tamdung (
+            hoso, mavt, somay, model, maql,
+            ngay_tamdung,
+            ngay_tieptuc, nguoi_tieptuc, ghichu_tieptuc,
+            thoigian_tamdung_gio, thoigian_tamdung_ngay,
+            nguoi_thuchien, ngay_thuchien,
+            trangthai
+        ) VALUES (
+            '$hosomay',
+            '$mavt',
+            '$somay',
+            '$model',
+            '$maql',
+            '$ngay_tamdung',
+            NOW(),
+            '$username_esc',
+            '$ghichu_esc',
+            TIMESTAMPDIFF(HOUR, '$ngay_tamdung', NOW()),
+            ROUND(TIMESTAMPDIFF(HOUR, '$ngay_tamdung', NOW()) / 24, 2),
+            '$username_esc',
+            NOW(),
+            'da_tiep_tuc'
+        )";
+        
+        error_log("DEBUG TIEPTUC ISO2: " . $insert_tieptuc);
+        
+        // DEBUG: Hiển thị SQL trên màn hình
+        echo "<!-- DEBUG SQL: " . htmlspecialchars($insert_tieptuc) . " -->";
+        
+        $result = mysql_query($insert_tieptuc);
+        
+        if ($result) {
+            $inserted_id = mysql_insert_id();
+            error_log("SUCCESS TIEPTUC ISO2: Inserted record ID = $inserted_id");
             echo "<script>
-                alert('Đã tiếp tục hồ sơ $hosomay thành công!');
+                alert('Đã tiếp tục hồ sơ $hosomay thành công!\\nRecord ID: $inserted_id');
                 window.location.href = 'formsc.php?edithoso=$hosomay&username=$username&mk=$password';
             </script>";
             exit;
         } else {
-            echo "<script>alert('Lỗi khi tiếp tục hồ sơ: " . mysql_error() . "');</script>";
+            $error = mysql_error();
+            $errno = mysql_errno();
+            $error_js = str_replace(array("\r", "\n", "'", '"'), array('', '', "\\'", '\\"'), $error);
+            $sql_js = str_replace(array("\r", "\n", "'", '"'), array('', ' ', "\\'", '\\"'), $insert_tieptuc);
+            echo "<script>
+                alert('Lỗi khi tiếp tục hồ sơ:\\n\\nError #$errno: $error_js\\n\\nXem Console để kiểm tra SQL query.');
+                console.error('SQL Error: $error_js');
+                console.log('SQL Query: $sql_js');
+            </script>";
+            error_log("ERROR TIEPTUC ISO2 (#$errno): $error");
+            error_log("FAILED SQL: " . $insert_tieptuc);
         }
     }
 }
@@ -868,13 +924,25 @@ while($row = mysql_fetch_array($result2))
 					if($row['ghichufinal']!="")
 					$ghichufinal =$row['ghichufinal'];
 				}
+                
+                // FIX ISO2: Lấy phieu từ edithoso nếu chưa có (sau resume redirect)
+                if (empty($fieu) && !empty($edithoso)) {
+                    $fieu_query = mysql_query("SELECT phieu FROM hososcbd_iso WHERE hoso='$edithoso' LIMIT 1");
+                    if ($fieu_query && mysql_num_rows($fieu_query) > 0) {
+                        $fieu_row = mysql_fetch_array($fieu_query);
+                        $fieu = $fieu_row['phieu'];
+                    }
+                }
+                
                 if ($phanquyen=="1") {
 			$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu'") ;
 		}
 
 		else {
-		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu' and ngaykt ='0000-00-00'") ;
-		$tenthietbisql2 = mysql_query("SELECT DISTINCT mavt,somay,model FROM hososcbd_iso WHERE phieu='$fieu' and ngaykt !='0000-00-00' ") ;
+		// User thường: Xem hồ sơ chưa kết thúc HOẶC có trong timeline tạm dừng (ISO2: lấy tất cả hồ sơ trong tamdung)
+		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu' AND (ngaykt ='0000-00-00' OR hoso IN (SELECT DISTINCT hoso FROM hososcbd_tamdung))") ;
+		// Hiển thị thông báo cho các hồ sơ đã kết thúc NHƯNG KHÔNG có trong timeline tạm dừng (ISO2: exclude tất cả hồ sơ trong tamdung)
+		$tenthietbisql2 = mysql_query("SELECT DISTINCT mavt,somay,model FROM hososcbd_iso WHERE phieu='$fieu' AND ngaykt !='0000-00-00' AND hoso NOT IN (SELECT DISTINCT hoso FROM hososcbd_tamdung)") ;
 			while($row = mysql_fetch_array($tenthietbisql2))
 			{
 			$mavt =$row['mavt'];	
@@ -5627,8 +5695,10 @@ if ($phanquyen=="1") {
 		}
 
 		else {
-		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE maql='$search' and ngaykt ='0000-00-00'") ;
-		$tenthietbisql2 = mysql_query("SELECT DISTINCT mavt,somay,model FROM hososcbd_iso WHERE maql='$search' and ngaykt !='0000-00-00' ") ;
+		// User thường: Xem hồ sơ chưa kết thúc HOẶC có trong timeline tạm dừng (ISO2: lấy tất cả hồ sơ trong tamdung)
+		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE maql='$search' AND (ngaykt ='0000-00-00' OR hoso IN (SELECT DISTINCT hoso FROM hososcbd_tamdung))") ;
+		// Hiển thị thông báo cho các hồ sơ đã kết thúc NHƯNG KHÔNG có trong timeline tạm dừng (ISO2: exclude tất cả hồ sơ trong tamdung)
+		$tenthietbisql2 = mysql_query("SELECT DISTINCT mavt,somay,model FROM hososcbd_iso WHERE maql='$search' AND ngaykt !='0000-00-00' AND hoso NOT IN (SELECT DISTINCT hoso FROM hososcbd_tamdung)") ;
 			while($row = mysql_fetch_array($tenthietbisql2))
 			{
 			$mavt =$row['mavt'];	
@@ -5979,10 +6049,14 @@ $is_tamdung = false;
 $tamdung_info = array();
 // Sử dụng $edithoso (từ URL) hoặc $hosomay (từ POST)
 $hoso_check = ($edithoso != '') ? $edithoso : $hosomay;
-$check_tamdung_sql = mysql_query("SELECT * FROM hososcbd_tamdung WHERE hoso='$hoso_check' AND trangthai='dang_tam_dung' ORDER BY ngay_tamdung DESC LIMIT 1");
+// ISO2: Lấy EVENT MỚI NHẤT, không filter trangthai (vì cần check record mới nhất)
+$check_tamdung_sql = mysql_query("SELECT * FROM hososcbd_tamdung WHERE hoso='$hoso_check' ORDER BY id DESC LIMIT 1");
 if ($check_tamdung_sql && mysql_num_rows($check_tamdung_sql) > 0) {
-    $is_tamdung = true;
     $tamdung_info = mysql_fetch_array($check_tamdung_sql);
+    // Check trangthai của record MỚI NHẤT
+    if ($tamdung_info['trangthai'] == 'dang_tam_dung') {
+        $is_tamdung = true;
+    }
 }
 // DEBUG: Hiển thị trạng thái
 echo "<!-- DEBUG: edithoso=$edithoso, hosomay=$hosomay, hoso_check=$hoso_check, is_tamdung=" . ($is_tamdung ? 'TRUE' : 'FALSE') . ", rows=" . ($check_tamdung_sql ? mysql_num_rows($check_tamdung_sql) : 'ERROR') . " -->";
@@ -5999,7 +6073,7 @@ var cal = new CalendarPopup();
 <script src=\"tinymce/tinymce.min.js\"></script>
 <script type=\"text/javascript\">
 tinymce.init({
-selector: \"textarea\"   
+selector: \"textarea:not(.no-tinymce)\"   
 }); 
 </script>
 <style>
@@ -6114,10 +6188,21 @@ while($row = mysql_fetch_array($result2))
 					if($row['ghichufinal']!="")
 					$ghichufinal =$row['ghichufinal'];
 				}
+                
+                // FIX ISO2: Lấy phieu từ edithoso nếu chưa có (sau resume redirect)
+                if (empty($fieu) && !empty($edithoso)) {
+                    $fieu_query = mysql_query("SELECT phieu FROM hososcbd_iso WHERE hoso='$edithoso' LIMIT 1");
+                    if ($fieu_query && mysql_num_rows($fieu_query) > 0) {
+                        $fieu_row = mysql_fetch_array($fieu_query);
+                        $fieu = $fieu_row['phieu'];
+                    }
+                }
+                
                 if ($phanquyen=="1")
 		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu'") ;
 		else
-		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu' and ngaykt ='0000-00-00'") ;
+		// User thường: Xem hồ sơ chưa kết thúc HOẶC có trong timeline tạm dừng (ISO2: lấy tất cả hồ sơ trong tamdung)
+		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu' AND (ngaykt ='0000-00-00' OR hoso IN (SELECT DISTINCT hoso FROM hososcbd_tamdung))") ;
 		$ck=0;
 		while($row = mysql_fetch_array($tenthietbisql1))
 		{
@@ -7215,7 +7300,7 @@ echo "
 <script src=\"tinymce/tinymce.min.js\"></script>
 <script type=\"text/javascript\">
 tinymce.init({
-selector: \"textarea\"   
+selector: \"textarea:not(.no-tinymce)\"   
 }); 
 </script>
 </head>
@@ -7437,6 +7522,7 @@ echo "<div style=\"margin-left:50px; margin-bottom:10px;\">
 
 // Hiển thị các nút tạm dừng/tiếp tục (mặc định ẩn)
 echo "<div id=\"quan-ly-trang-thai-create\" style=\"margin-left:50px; margin-bottom:20px; padding:15px; background-color:#f5f5f5; border-radius:5px; display:none;\">";
+
 if ($is_tamdung) {
     // Nếu đang tạm dừng → hiển thị nút tiếp tục
     echo "<h3 style=\"color:#e65100;\">⏸ Hồ sơ đang tạm dừng - Bạn có muốn tiếp tục?</h3>
@@ -7446,14 +7532,9 @@ if ($is_tamdung) {
         <input type=\"hidden\" name=\"hosomay\" value=\"$hoso_check\">
         <input type=\"hidden\" name=\"action_tamdung\" value=\"tieptuc\">
         <label for=\"ghichu_tieptuc\"><strong>Ghi chú khi tiếp tục:</strong></label><br/>
-        <textarea name=\"ghichu_tieptuc\" id=\"ghichu_tieptuc\" rows=\"2\" cols=\"50\" placeholder=\"Nhập ghi chú (không bắt buộc)\" style=\"margin-top:5px;\"></textarea><br/>
+        <textarea name=\"ghichu_tieptuc\" id=\"ghichu_tieptuc\" class=\"no-tinymce\" rows=\"2\" cols=\"50\" placeholder=\"Nhập ghi chú (không bắt buộc)\" style=\"margin-top:5px;\"></textarea><br/>
         <button type=\"submit\" class=\"btn-tieptuc\" style=\"margin-top:10px;\">▶ TIẾP TỤC HỒ SƠ</button>
-    </form>
-    <script>
-    function confirmTieptuc() {
-        return confirm('Bạn có chắc muốn tiếp tục hồ sơ này?\\n\\nHồ sơ sẽ được đánh dấu là đã tiếp tục và bạn có thể làm việc bình thường.');
-    }
-    </script>";
+    </form>";
 } else {
     // Nếu chưa tạm dừng → hiển thị nút tạm dừng
     echo "<h3 style=\"color:#1976d2;\">⚙️ Quản lý trạng thái hồ sơ</h3>
@@ -7463,22 +7544,13 @@ if ($is_tamdung) {
         <input type=\"hidden\" name=\"hosomay\" value=\"$hoso_check\">
         <input type=\"hidden\" name=\"action_tamdung\" value=\"tamdung\">
         <label for=\"lydo_tamdung\"><strong>Lý do tạm dừng:</strong> <span style=\"color:red;\">*</span></label><br/>
-        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" style=\"margin-top:5px;\"></textarea><br/>
+        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung\" class=\"no-tinymce\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" style=\"margin-top:5px;\"></textarea><br/>
         <button type=\"submit\" class=\"btn-tamdung\" style=\"margin-top:10px;\">⏸ TẠM DỪNG HỒ SƠ</button>
-    </form>
-    <script>
-    function confirmTamdung() {
-        var lydo = document.getElementById('lydo_tamdung').value.trim();
-        if (lydo === '') {
-            alert('Vui lòng nhập lý do tạm dừng!');
-            return false;
-        }
-        return confirm('Bạn có chắc muốn tạm dừng hồ sơ này?\\n\\nLý do: ' + lydo + '\\n\\nHồ sơ sẽ được đánh dấu là đang tạm dừng.');
-    }
-    </script>";
+    </form>";
 }
 echo "</div>";
 
+// Định nghĩa JavaScript functions BÊN NGOÀI div display:none
 echo "<script>
 function toggleQuanLyTrangThaiCreate() {
     var element = document.getElementById('quan-ly-trang-thai-create');
@@ -7490,6 +7562,26 @@ function toggleQuanLyTrangThaiCreate() {
         element.style.display = 'none';
         icon.innerHTML = '▼';
     }
+}
+
+function confirmTieptuc() {
+    return confirm('Bạn có chắc muốn tiếp tục hồ sơ này?\\n\\nHồ sơ sẽ được đánh dấu là đã tiếp tục và bạn có thể làm việc bình thường.');
+}
+
+function confirmTamdung() {
+    var textarea = document.getElementById('lydo_tamdung');
+    if (!textarea) {
+        alert('Lỗi: Không tìm thấy textarea. Vui lòng refresh trang.');
+        return false;
+    }
+    
+    var lydo = textarea.value.trim();
+    if (lydo === '' || lydo.length === 0) {
+        alert('Vui lòng nhập lý do tạm dừng!');
+        textarea.focus();
+        return false;
+    }
+    return confirm('Bạn có chắc muốn tạm dừng hồ sơ này?\\n\\nLý do: ' + lydo + '\\n\\nHồ sơ sẽ được đánh dấu là đang tạm dừng.');
 }
 </script>";
 
@@ -12382,7 +12474,7 @@ var cal = new CalendarPopup();
 <script src=\"tinymce/tinymce.min.js\"></script>
 <script type=\"text/javascript\">
 tinymce.init({
-selector: \"textarea\"   
+selector: \"textarea:not(.no-tinymce)\"   
 }); 
 </script>
 </head>
@@ -12805,7 +12897,7 @@ var cal = new CalendarPopup();
 <script src=\"tinymce/tinymce.min.js\"></script>
 <script type=\"text/javascript\">
 tinymce.init({
-selector: \"textarea\"   
+selector: \"textarea:not(.no-tinymce)\"   
 }); 
 </script>
 </head>
@@ -14022,7 +14114,7 @@ var cal = new CalendarPopup();
 <script src=\"tinymce/tinymce.min.js\"></script>
 <script type=\"text/javascript\">
 tinymce.init({
-selector: \"textarea\"   
+selector: \"textarea:not(.no-tinymce)\"   
 }); 
 </script>
 </head>
@@ -14501,10 +14593,14 @@ $curday = date("d/m/Y");
 // Kiểm tra xem hồ sơ có đang tạm dừng không
 $is_tamdung = false;
 $tamdung_info = array();
-$check_tamdung_sql = mysql_query("SELECT * FROM hososcbd_tamdung WHERE hoso='$edithoso' AND trangthai='dang_tam_dung' ORDER BY ngay_tamdung DESC LIMIT 1");
+// ISO2: Lấy EVENT MỚI NHẤT, không filter trangthai (vì cần check record mới nhất)
+$check_tamdung_sql = mysql_query("SELECT * FROM hososcbd_tamdung WHERE hoso='$edithoso' ORDER BY id DESC LIMIT 1");
 if (mysql_num_rows($check_tamdung_sql) > 0) {
-    $is_tamdung = true;
     $tamdung_info = mysql_fetch_array($check_tamdung_sql);
+    // Check trangthai của record MỚI NHẤT
+    if ($tamdung_info['trangthai'] == 'dang_tam_dung') {
+        $is_tamdung = true;
+    }
 }
 
 echo "
@@ -14518,7 +14614,7 @@ var cal = new CalendarPopup();
 <script src=\"tinymce/tinymce.min.js\"></script>
 <script type=\"text/javascript\">
 tinymce.init({
-selector: \"textarea\"   
+selector: \"textarea:not(.no-tinymce)\"   
 }); 
 </script>
 <style>
@@ -14619,6 +14715,7 @@ echo "<div style=\"margin-left:50px; margin-bottom:10px;\">
 
 // Hiển thị các nút tạm dừng/tiếp tục (mặc định ẩn)
 echo "<div id=\"quan-ly-trang-thai\" style=\"margin-left:50px; margin-bottom:20px; padding:15px; background-color:#f5f5f5; border-radius:5px; display:none;\">";
+
 if ($is_tamdung) {
     echo "<h3 style=\"color:#e65100;\">⏸ Hồ sơ đang tạm dừng - Bạn có muốn tiếp tục?</h3>
     <form method=\"post\" action=\"formsc.php?edithoso=$edithoso&username=$username&mk=$password\" style=\"display:inline-block;\" onsubmit=\"return confirmTieptucEdit();\">
@@ -14627,42 +14724,24 @@ if ($is_tamdung) {
         <input type=\"hidden\" name=\"hosomay\" value=\"$edithoso\">
         <input type=\"hidden\" name=\"action_tamdung\" value=\"tieptuc\">
         <label for=\"ghichu_tieptuc_edit\"><strong>Ghi chú khi tiếp tục:</strong></label><br/>
-        <textarea name=\"ghichu_tieptuc\" id=\"ghichu_tieptuc_edit\" rows=\"2\" cols=\"50\" placeholder=\"Nhập ghi chú (không bắt buộc)\" style=\"margin-top:5px;\"></textarea><br/>
+        <textarea name=\"ghichu_tieptuc\" id=\"ghichu_tieptuc_edit\" class=\"no-tinymce\" rows=\"2\" cols=\"50\" placeholder=\"Nhập ghi chú (không bắt buộc)\" style=\"margin-top:5px;\"></textarea><br/>
         <button type=\"submit\" class=\"btn-tieptuc\" style=\"margin-top:10px;\">▶ TIẾP TỤC HỒ SƠ</button>
-    </form>
-    <script>
-    function confirmTieptucEdit() {
-        return confirm('Bạn có chắc muốn tiếp tục hồ sơ này?\\n\\nHồ sơ sẽ được đánh dấu là đã tiếp tục và bạn có thể làm việc bình thường.');
-    }
-    </script>";
+    </form>";
 } else {
     echo "<h3 style=\"color:#1976d2;\">⚙️ Quản lý trạng thái hồ sơ</h3>
-    <form method=\"post\" action=\"formsc.php?edithoso=$edithoso&username=$username&mk=$password\" style=\"display:inline-block;\" onsubmit=\"console.log('Form submitting...'); return confirmTamdungEdit();\">
+    <form method=\"post\" action=\"formsc.php?edithoso=$edithoso&username=$username&mk=$password\" style=\"display:inline-block;\" onsubmit=\"return confirmTamdungEdit();\">
         <input type=\"hidden\" name=\"username\" value=\"$username\">
         <input type=\"hidden\" name=\"password\" value=\"$password\">
         <input type=\"hidden\" name=\"hosomay\" value=\"$edithoso\">
         <input type=\"hidden\" name=\"action_tamdung\" value=\"tamdung\">
         <label for=\"lydo_tamdung_edit\"><strong>Lý do tạm dừng:</strong> <span style=\"color:red;\">*</span></label><br/>
-        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung_edit\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" style=\"margin-top:5px;\"></textarea><br/>
+        <textarea name=\"lydo_tamdung\" id=\"lydo_tamdung_edit\" class=\"no-tinymce\" rows=\"2\" cols=\"50\" placeholder=\"VD: Chờ linh kiện, chờ phê duyệt, thiếu nhân lực...\" style=\"margin-top:5px;\"></textarea><br/>
         <button type=\"submit\" class=\"btn-tamdung\" style=\"margin-top:10px;\">⏸ TẠM DỪNG HỒ SƠ</button>
-    </form>
-    <script>
-    function confirmTamdungEdit() {
-        console.log('confirmTamdungEdit called');
-        var lydo = document.getElementById('lydo_tamdung_edit').value.trim();
-        console.log('Lý do:', lydo);
-        if (lydo === '') {
-            alert('Vui lòng nhập lý do tạm dừng!');
-            return false;
-        }
-        var result = confirm('Bạn có chắc muốn tạm dừng hồ sơ này?\\n\\nLý do: ' + lydo + '\\n\\nHồ sơ sẽ được đánh dấu là đang tạm dừng.');
-        console.log('Confirm result:', result);
-        return result;
-    }
-    </script>";
+    </form>";
 }
 echo "</div>";
 
+// Định nghĩa JavaScript functions BÊN NGOÀI div display:none
 echo "<script>
 function toggleQuanLyTrangThai() {
     var element = document.getElementById('quan-ly-trang-thai');
@@ -14674,6 +14753,26 @@ function toggleQuanLyTrangThai() {
         element.style.display = 'none';
         icon.innerHTML = '▼';
     }
+}
+
+function confirmTieptucEdit() {
+    return confirm('Bạn có chắc muốn tiếp tục hồ sơ này?\\n\\nHồ sơ sẽ được đánh dấu là đã tiếp tục và bạn có thể làm việc bình thường.');
+}
+
+function confirmTamdungEdit() {
+    var textarea = document.getElementById('lydo_tamdung_edit');
+    if (!textarea) {
+        alert('Lỗi: Không tìm thấy textarea. Vui lòng refresh trang.');
+        return false;
+    }
+    
+    var lydo = textarea.value.trim();
+    if (lydo === '' || lydo.length === 0) {
+        alert('Vui lòng nhập lý do tạm dừng!');
+        textarea.focus();
+        return false;
+    }
+    return confirm('Bạn có chắc muốn tạm dừng hồ sơ này?\\n\\nLý do: ' + lydo + '\\n\\nHồ sơ sẽ được đánh dấu là đang tạm dừng.');
 }
 </script>";
 
@@ -14701,10 +14800,21 @@ while($row = mysql_fetch_array($result2))
 					if($row['ghichufinal']!="")
 					$ghichufinal =$row['ghichufinal'];
 				}
+                
+                // FIX ISO2: Lấy phieu từ edithoso nếu chưa có (sau resume redirect)
+                if (empty($fieu) && !empty($edithoso)) {
+                    $fieu_query = mysql_query("SELECT phieu FROM hososcbd_iso WHERE hoso='$edithoso' LIMIT 1");
+                    if ($fieu_query && mysql_num_rows($fieu_query) > 0) {
+                        $fieu_row = mysql_fetch_array($fieu_query);
+                        $fieu = $fieu_row['phieu'];
+                    }
+                }
+                
                                if ($phanquyen=="1")
 		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu'") ;
 		else
-		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu' and ngaykt ='0000-00-00'") ;
+		// User thường: Xem hồ sơ chưa kết thúc HOẶC có trong timeline tạm dừng (ISO2: lấy tất cả hồ sơ trong tamdung)
+		$tenthietbisql1 = mysql_query("SELECT DISTINCT mavt,somay,hoso,model FROM hososcbd_iso WHERE phieu='$fieu' AND (ngaykt ='0000-00-00' OR hoso IN (SELECT DISTINCT hoso FROM hososcbd_tamdung))") ;
 		$ck=0;
 		while($row = mysql_fetch_array($tenthietbisql1))
 		{
